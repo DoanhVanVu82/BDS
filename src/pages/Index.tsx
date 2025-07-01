@@ -22,11 +22,39 @@ const Index = () => {
   const [isSearching, setIsSearching] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>('search');
 
-  const handleSearch = async (address: string) => {
+  const handleSearch = async (address: string, lat?: number, lng?: number) => {
     setIsSearching(true);
     setTimeout(() => {
       const land = mockLandDataList.find(l => l.address === address);
-      setSelectedLand(land || null);
+      if (land) {
+        setSelectedLand(land);
+      } else {
+        // Nếu không có trong mock, tạo LandData tạm
+        const tempLand: LandData = {
+          id: 'custom-search',
+          address: address,
+          area: 0,
+          plotNumber: '',
+          shape: lat && lng ? [{ lat, lng }] : [],
+          frontDirection: '',
+          fullAddress: address,
+          landType: '',
+          legalStatus: '',
+          amenities: [],
+          roadWidth: 0,
+          maxRooms: 0,
+          expansion: false,
+          priceEstimate: {
+            pricePerM2: 0,
+            totalValue: 0,
+            confidence: 0
+          },
+          recentTransactions: [],
+          liquidityDays: 0,
+          averagePrice: 0
+        };
+        setSelectedLand(tempLand);
+      }
       setIsSearching(false);
       setViewMode('results');
     }, 800);
@@ -39,21 +67,31 @@ const Index = () => {
   };
 
   const handleCustomPlotDraw = (area: number, points: Point[]) => {
+    // Tính centroid của polygon
+    let centroid = { lat: 0, lng: 0 };
+    if (points.length > 0) {
+      let latSum = 0, lngSum = 0;
+      for (const pt of points) {
+        latSum += pt.lat;
+        lngSum += pt.lng;
+      }
+      centroid.lat = latSum / points.length;
+      centroid.lng = lngSum / points.length;
+    } else {
+      centroid = { lat: 10.762622, lng: 106.660172 };
+    }
     // Tạo dữ liệu LandData mới dựa trên plot vẽ custom
     const land: LandData = {
       id: "custom",
       address: "Mảnh đất tùy chỉnh",
       area: area,
       plotNumber: "VẼ/CUSTOM",
-      shape: "irregular",
+      shape: points,
       frontDirection: "Đông Nam",
       fullAddress: "Mảnh đất do người dùng vẽ, Quận 1, TP.HCM",
       landType: "Đất ở đô thị",
       legalStatus: "Cần xác minh",
-      coordinates: {
-        lat: points[0]?.lat || 10.762622,
-        lng: points[0]?.lng || 106.660172
-      },
+      coordinates: centroid,
       amenities: [],
       roadWidth: 6,
       maxRooms: Math.floor(area / 30),
@@ -118,10 +156,10 @@ const Index = () => {
           <div className="container mx-auto px-4 py-8">
             <div className="mb-6 text-center">
               <h2 className="text-3xl font-bold text-gray-800 mb-2">
-                Chọn thửa đất từ bản đồ
+                Chọn mảnh đất từ bản đồ
               </h2>
               <p className="text-gray-600">
-                Chọn một thửa đất có sẵn hoặc vẽ mảnh đất tùy chỉnh
+                Chọn một mảnh đất có sẵn hoặc vẽ mảnh đất tùy chỉnh
               </p>
             </div>
             
@@ -160,7 +198,7 @@ const Index = () => {
                 onClick={handleReset}
                 className="bg-gradient-to-r from-green-500 to-blue-500 text-white px-6 py-2 rounded-lg hover:from-green-600 hover:to-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl"
               >
-                ← Tìm kiếm mới
+                Tìm kiếm mới
               </button>
             </div>
             

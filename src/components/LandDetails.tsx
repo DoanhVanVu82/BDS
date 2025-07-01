@@ -1,4 +1,3 @@
-
 import { 
   Home, 
   MapPin, 
@@ -123,7 +122,7 @@ const LandDetails = ({ land }: LandDetailsProps) => {
         </CardHeader>
         <CardContent className="p-6">
           <div className="mb-6">
-            <Map coordinates={land.coordinates} />
+            <Map shape={land.shape} amenities={land.amenities} />
           </div>
           
           <div>

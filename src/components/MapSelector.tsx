@@ -15,15 +15,38 @@ interface MapSelectorProps {
 
 const MapSelector = ({ onPlotSelect, onDrawCustom, onCancel }: MapSelectorProps) => {
   const [selectedPlot, setSelectedPlot] = useState<string | null>(null);
+  const [satellite, setSatellite] = useState(false);
+  const [planning, setPlanning] = useState(false);
 
-  const availablePlots = mockLandDataList.map(l => ({
-    id: l.id,
-    address: l.address,
-    area: l.area,
-    plotNumber: l.plotNumber,
-    coordinates: l.coordinates,
-    available: true // hoặc logic khác nếu muốn
-  }));
+  const availablePlots = mockLandDataList.map(l => {
+    let centroid = { lat: 10.762622, lng: 106.660172 };
+    if (Array.isArray(l.shape) && l.shape.length > 0) {
+      centroid = {
+        lat: l.shape.reduce((sum, p) => sum + p.lat, 0) / l.shape.length,
+        lng: l.shape.reduce((sum, p) => sum + p.lng, 0) / l.shape.length,
+      };
+    }
+    return {
+      id: l.id,
+      address: l.address,
+      area: l.area,
+      plotNumber: l.plotNumber,
+      centroid,
+      available: true
+    };
+  });
+
+  const getCentroid = (shape) => {
+    if (Array.isArray(shape) && shape.length > 0) {
+      let latSum = 0, lngSum = 0;
+      for (const pt of shape) {
+        latSum += pt.lat;
+        lngSum += pt.lng;
+      }
+      return { lat: latSum / shape.length, lng: lngSum / shape.length };
+    }
+    return { lat: 10.762622, lng: 106.660172 };
+  };
 
   const handlePlotClick = (plotId: string) => {
     setSelectedPlot(plotId);
@@ -36,6 +59,7 @@ const MapSelector = ({ onPlotSelect, onDrawCustom, onCancel }: MapSelectorProps)
   };
 
   const selected = availablePlots.find(p => p.id === selectedPlot) || availablePlots[0];
+  const selectedCentroid = getCentroid(selected.shape);
 
   return (
     <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-6">
@@ -49,12 +73,39 @@ const MapSelector = ({ onPlotSelect, onDrawCustom, onCancel }: MapSelectorProps)
         </CardHeader>
         <CardContent className="p-0">
           <div className="relative w-full h-96">
-            <MapContainer center={[selected.coordinates.lat, selected.coordinates.lng]} zoom={15} style={{ height: '100%', width: '100%', borderRadius: 12 }}>
-              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            <button
+              onClick={() => setSatellite(s => !s)}
+              style={{ position: 'absolute', zIndex: 1000, right: 16, top: 16, background: '#fff', border: '1px solid #ccc', borderRadius: 6, padding: '6px 12px', fontWeight: 500, cursor: 'pointer', boxShadow: '0 2px 8px #0002' }}
+            >
+              {satellite ? 'Bản đồ thường' : 'Vệ tinh'}
+            </button>
+            <button
+              onClick={() => setPlanning(p => !p)}
+              style={{ position: 'absolute', zIndex: 1000, right: 16, top: 60, background: planning ? '#e0e7ff' : '#fff', border: '1px solid #ccc', borderRadius: 6, padding: '6px 12px', fontWeight: 500, cursor: 'pointer', boxShadow: '0 2px 8px #0002' }}
+            >
+              {planning ? 'Tắt quy hoạch' : 'Quy hoạch'}
+            </button>
+            <MapContainer center={[selected.centroid.lat, selected.centroid.lng]} zoom={satellite ? 18 : 15} maxZoom={satellite ? 20 : 19} style={{ height: '100%', width: '100%', borderRadius: 12 }}>
+              <TileLayer url={satellite
+                ? 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+                : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+              }
+              attribution={satellite
+                ? 'Tiles © Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+                : undefined
+              }
+              maxZoom={satellite ? 20 : 19}
+              />
+              {planning && (
+                <TileLayer
+                  url="https://l5cfglaebpobj.vcdn.cloud/ha-noi-2030-2/{z}/{x}/{y}.png"
+                  opacity={0.5}
+                />
+              )}
               {availablePlots.map((plot, index) => (
                 <Marker
                   key={plot.id}
-                  position={[plot.coordinates.lat, plot.coordinates.lng]}
+                  position={[plot.centroid.lat, plot.centroid.lng]}
                   eventHandlers={{ click: () => handlePlotClick(plot.id) }}
                 >
                   <Popup>
@@ -71,7 +122,7 @@ const MapSelector = ({ onPlotSelect, onDrawCustom, onCancel }: MapSelectorProps)
         <CardHeader className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
           <CardTitle className="flex items-center gap-3">
             <Layers className="w-6 h-6" />
-            Danh sách thửa đất
+            Danh sách mảnh đất
           </CardTitle>
         </CardHeader>
         <CardContent className="p-6">
@@ -119,7 +170,7 @@ const MapSelector = ({ onPlotSelect, onDrawCustom, onCancel }: MapSelectorProps)
               Vẽ mảnh đất tùy chỉnh
             </Button>
             <Button onClick={handleConfirmSelection} disabled={!selectedPlot} className="w-full bg-green-500 text-white">
-              Xác nhận chọn thửa đất
+              Xác nhận chọn mảnh đất
             </Button>
             <Button onClick={onCancel} variant="ghost" className="w-full">
               Hủy

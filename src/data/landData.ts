@@ -24,15 +24,11 @@ export interface Amenity {
     address: string;
     area: number;
     plotNumber: string;
-    shape: 'rectangular' | 'square' | 'irregular' | 'triangular';
+    shape: { lat: number; lng: number }[];
     frontDirection: string;
     fullAddress: string;
     landType: string;
     legalStatus: string;
-    coordinates: {
-      lat: number;
-      lng: number;
-    };
     amenities: Amenity[];
     roadWidth: number; // in meters
     maxRooms: number;
@@ -51,12 +47,17 @@ export interface Amenity {
       address: "123 Nguyễn Huệ, Quận 1, TP.HCM",
       area: 120,
       plotNumber: "254/3B",
-      shape: "rectangular",
+      shape: [
+        { lat: 10.746540034223, lng: 106.61563289437 },
+        { lat: 10.746485792764, lng: 106.61563237411 },
+        { lat: 10.746487512576, lng: 106.61540445908 },
+        { lat: 10.746541753529, lng: 106.61540516214 },
+        { lat: 10.746540034223, lng: 106.61563289437 }
+      ],
       frontDirection: "Đông Nam",
       fullAddress: "123 Nguyễn Huệ, Phường Bến Nghé, Quận 1, TP.HCM",
       landType: "Đất ở đô thị",
       legalStatus: "Sổ đỏ chính chủ",
-      coordinates: { lat: 10.7769, lng: 106.7009 },
       amenities: [
         { name: "Bệnh viện Nhi Đồng 2", distance: 1.5, type: "hospital" },
         { name: "Trường THPT Trưng Vương", distance: 1.2, type: "school" },
@@ -82,12 +83,22 @@ export interface Amenity {
       address: "456 Lê Lợi, Quận 3, TP.HCM",
       area: 80,
       plotNumber: "88A/12",
-      shape: "square",
+      shape: [
+        { lat: 10.730904403049, lng: 106.58126230664 },
+        { lat: 10.730827197888, lng: 106.58126182143 },
+        { lat: 10.730828862898, lng: 106.58111235427 },
+        { lat: 10.730835110858, lng: 106.58110862311 },
+        { lat: 10.730829671156, lng: 106.58094514927 },
+        { lat: 10.730843955884, lng: 106.58094491402 },
+        { lat: 10.730845807692, lng: 106.5809285549 },
+        { lat: 10.730893821311, lng: 106.58092548633 },
+        { lat: 10.730898252741, lng: 106.58099260074 },
+        { lat: 10.730904403049, lng: 106.58126230664 }
+      ],
       frontDirection: "Tây Bắc",
       fullAddress: "456 Lê Lợi, Phường 6, Quận 3, TP.HCM",
       landType: "Đất ở đô thị",
       legalStatus: "Sổ hồng",
-      coordinates: { lat: 10.782, lng: 106.694 },
       amenities: [
         { name: "Bệnh viện Bình Dân", distance: 2.1, type: "hospital" },
         { name: "Trường THCS Lê Quý Đôn", distance: 0.5, type: "school" },
@@ -112,12 +123,17 @@ export interface Amenity {
       address: "789 Cách Mạng Tháng Tám, Quận 10, TP.HCM",
       area: 250,
       plotNumber: "12",
-      shape: "irregular",
+      shape: [
+        { lat: 10.7742, lng: 106.6658 },
+        { lat: 10.7742, lng: 106.6662 },
+        { lat: 10.7738, lng: 106.6662 },
+        { lat: 10.7738, lng: 106.6658 },
+        { lat: 10.7742, lng: 106.6658 }
+      ],
       frontDirection: "Nam",
       fullAddress: "789 Cách Mạng Tháng Tám, Phường 15, Quận 10, TP.HCM",
       landType: "Đất thương mại dịch vụ",
       legalStatus: "Giấy tờ tay",
-      coordinates: { lat: 10.774, lng: 106.666 },
       amenities: [
         { name: "Bệnh viện 115", distance: 0.7, type: "hospital" },
         { name: "Siêu thị Big C Miền Đông", distance: 0.5, type: "market" },
@@ -144,12 +160,17 @@ export interface Amenity {
       address: "25 Phố Huế, Hai Bà Trưng, Hà Nội",
       area: 95,
       plotNumber: "55/HBT",
-      shape: "rectangular",
+      shape: [
+        { lat: 21.0167, lng: 105.8523 },
+        { lat: 21.0167, lng: 105.8527 },
+        { lat: 21.0163, lng: 105.8527 },
+        { lat: 21.0163, lng: 105.8523 },
+        { lat: 21.0167, lng: 105.8523 }
+      ],
       frontDirection: "Đông",
       fullAddress: "25 Phố Huế, Phường Hàng Bài, Quận Hoàn Kiếm, Hà Nội",
       landType: "Đất ở đô thị",
       legalStatus: "Sổ đỏ chính chủ",
-      coordinates: { lat: 21.0165, lng: 105.8525 },
       amenities: [
         { name: "Bệnh viện Việt Đức", distance: 1.0, type: "hospital" },
         { name: "Trường THPT Việt Đức", distance: 0.8, type: "school" },
@@ -174,12 +195,17 @@ export interface Amenity {
       address: "102 Trần Duy Hưng, Cầu Giấy, Hà Nội",
       area: 150,
       plotNumber: "CG-88",
-      shape: "square",
+      shape: [
+        { lat: 21.0078, lng: 105.8023 },
+        { lat: 21.0078, lng: 105.8027 },
+        { lat: 21.0074, lng: 105.8027 },
+        { lat: 21.0074, lng: 105.8023 },
+        { lat: 21.0078, lng: 105.8023 }
+      ],
       frontDirection: "Tây",
       fullAddress: "102 Trần Duy Hưng, Phường Trung Hoà, Quận Cầu Giấy, Hà Nội",
       landType: "Đất dự án",
       legalStatus: "Đang chờ sổ",
-      coordinates: { lat: 21.0076, lng: 105.8025 },
       amenities: [
         { name: "Bệnh viện Giao thông Vận tải", distance: 2.5, type: "hospital" },
         { name: "Trường THPT Chuyên Hà Nội - Amsterdam", distance: 1.0, type: "school" },
@@ -206,12 +232,17 @@ export interface Amenity {
       address: "55 Võ Nguyên Giáp, Sơn Trà, Đà Nẵng",
       area: 300,
       plotNumber: "ST-202",
-      shape: "rectangular",
+      shape: [
+        { lat: 16.0642, lng: 108.2428 },
+        { lat: 16.0642, lng: 108.2432 },
+        { lat: 16.0638, lng: 108.2432 },
+        { lat: 16.0638, lng: 108.2428 },
+        { lat: 16.0642, lng: 108.2428 }
+      ],
       frontDirection: "Đông",
       fullAddress: "55 Võ Nguyên Giáp, Phường Phước Mỹ, Quận Sơn Trà, Đà Nẵng",
       landType: "Đất thương mại dịch vụ",
       legalStatus: "Sổ hồng",
-      coordinates: { lat: 16.064, lng: 108.243 },
       amenities: [
         { name: "Bệnh viện Đa khoa Đà Nẵng", distance: 4.0, type: "hospital" },
         { name: "Bãi biển Mỹ Khê", distance: 0.1, type: "park" },
@@ -237,12 +268,17 @@ export interface Amenity {
       address: "2 Bạch Đằng, Hải Châu, Đà Nẵng",
       area: 180,
       plotNumber: "HC-101",
-      shape: "triangular",
+      shape: [
+        { lat: 16.0712, lng: 108.2228 },
+        { lat: 16.0712, lng: 108.2232 },
+        { lat: 16.0708, lng: 108.2232 },
+        { lat: 16.0708, lng: 108.2228 },
+        { lat: 16.0712, lng: 108.2228 }
+      ],
       frontDirection: "Bắc",
       fullAddress: "2 Bạch Đằng, Phường Thạch Thang, Quận Hải Châu, Đà Nẵng",
       landType: "Đất ở đô thị",
       legalStatus: "Sổ đỏ chính chủ",
-      coordinates: { lat: 16.071, lng: 108.223 },
       amenities: [
           { name: "Bệnh viện C Đà Nẵng", distance: 0.8, type: "hospital" },
           { name: "Trường THPT Phan Châu Trinh", distance: 1.5, type: "school" },

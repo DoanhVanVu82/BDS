@@ -2,15 +2,17 @@ import { useState } from "react";
 import { Search, MapPin, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { mockLandDataList } from "@/data/landData";
 
 interface SearchFormProps {
-  onSearch: (address: string) => void;
+  onSearch: (address: string, lat?: number, lng?: number) => void;
   isSearching: boolean;
 }
 
 const SearchForm = ({ onSearch, isSearching }: SearchFormProps) => {
   const [address, setAddress] = useState("");
+  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,7 +21,28 @@ const SearchForm = ({ onSearch, isSearching }: SearchFormProps) => {
     }
   };
 
-  const suggestedAddresses = mockLandDataList.map(l => l.address);
+  const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setAddress(value);
+    if (value.trim().length > 2) {
+      setLoading(true);
+      setShowSuggestions(true);
+      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(value)}&addressdetails=1&limit=5&accept-language=vi`;
+      const res = await fetch(url);
+      const data = await res.json();
+      setSuggestions(data);
+      setLoading(false);
+    } else {
+      setSuggestions([]);
+      setShowSuggestions(false);
+    }
+  };
+
+  const handleSuggestionClick = (sug: any) => {
+    setAddress(sug.display_name);
+    setShowSuggestions(false);
+    onSearch(sug.display_name, parseFloat(sug.lat), parseFloat(sug.lon));
+  };
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -42,12 +65,27 @@ const SearchForm = ({ onSearch, isSearching }: SearchFormProps) => {
                 type="text"
                 placeholder="Nhập địa chỉ đất (VD: 123 Nguyễn Huệ, Quận 1, TP.HCM)"
                 value={address}
-                onChange={(e) => setAddress(e.target.value)}
+                onChange={handleInputChange}
                 className="pl-12 h-14 text-lg border-2 border-gray-200 focus:border-green-500 rounded-xl"
                 disabled={isSearching}
+                autoComplete="off"
+                onFocus={() => address.length > 2 && suggestions.length > 0 && setShowSuggestions(true)}
               />
+              {loading && <Loader2 className="absolute right-4 top-1/2 transform -translate-y-1/2 text-green-500 animate-spin w-5 h-5" />}
+              {showSuggestions && suggestions.length > 0 && (
+                <ul className="absolute left-0 right-0 top-14 bg-white border border-gray-200 rounded-b-xl shadow-lg z-20 max-h-60 overflow-y-auto">
+                  {suggestions.map((sug, idx) => (
+                    <li
+                      key={sug.place_id}
+                      className="p-3 hover:bg-green-50 cursor-pointer text-sm border-b border-gray-100 last:border-b-0"
+                      onClick={() => handleSuggestionClick(sug)}
+                    >
+                      {sug.display_name}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
-            
             <Button 
               type="submit" 
               disabled={!address.trim() || isSearching}
@@ -66,22 +104,6 @@ const SearchForm = ({ onSearch, isSearching }: SearchFormProps) => {
               )}
             </Button>
           </form>
-        </div>
-
-        <div className="bg-gray-50 px-8 py-6 border-t border-gray-100">
-          <h3 className="text-sm font-semibold text-gray-700 mb-3">Gợi ý địa chỉ:</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {suggestedAddresses.map((addr, index) => (
-              <button
-                key={index}
-                onClick={() => setAddress(addr)}
-                className="text-left text-sm p-3 rounded-lg bg-white hover:bg-green-50 hover:text-green-700 transition-colors duration-200 border border-gray-200 hover:border-green-300"
-                disabled={isSearching}
-              >
-                {addr}
-              </button>
-            ))}
-          </div>
         </div>
       </div>
     </div>

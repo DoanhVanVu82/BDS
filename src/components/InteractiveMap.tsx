@@ -41,6 +41,8 @@ function calculateArea(points: Point[]): number {
 const InteractiveMap = ({ onPlotSelected, onCancel }: InteractiveMapProps) => {
   const [points, setPoints] = useState<Point[]>([]);
   const [isDrawing, setIsDrawing] = useState(false);
+  const [satellite, setSatellite] = useState(false);
+  const [planning, setPlanning] = useState(false);
   const center = { lat: 10.762622, lng: 106.660172 };
 
   const clearPoints = () => setPoints([]);
@@ -80,8 +82,37 @@ const InteractiveMap = ({ onPlotSelected, onCancel }: InteractiveMapProps) => {
           </div>
         </div>
         <div className="relative w-full h-96 rounded-lg border-2 border-gray-200 overflow-hidden">
-          <MapContainer center={center} zoom={16} style={{ height: '100%', width: '100%', borderRadius: 12 }}>
-            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+          <button
+            onClick={() => setSatellite(s => !s)}
+            style={{ position: 'absolute', zIndex: 1000, right: 16, top: 16, background: '#fff', border: '1px solid #ccc', borderRadius: 6, padding: '6px 12px', fontWeight: 500, cursor: 'pointer', boxShadow: '0 2px 8px #0002' }}
+          >
+            {satellite ? 'Bản đồ thường' : 'Vệ tinh'}
+          </button>
+          <button
+            onClick={() => setPlanning(p => !p)}
+            style={{ position: 'absolute', zIndex: 1000, right: 16, top: 60, background: planning ? '#e0e7ff' : '#fff', border: '1px solid #ccc', borderRadius: 6, padding: '6px 12px', fontWeight: 500, cursor: 'pointer', boxShadow: '0 2px 8px #0002' }}
+          >
+            {planning ? 'Tắt quy hoạch' : 'Quy hoạch'}
+          </button>
+          <MapContainer center={center} zoom={satellite ? 18 : 16} maxZoom={satellite ? 20 : 19} style={{ height: '100%', width: '100%', borderRadius: 12 }}>
+            <TileLayer
+              url={satellite
+                ? 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+                : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+              }
+              // @ts-expect-error: attribution is a valid prop at runtime
+              attribution={satellite
+                ? 'Tiles © Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+                : undefined
+              }
+              maxZoom={satellite ? 20 : 19}
+            />
+            {planning && (
+              <TileLayer
+                url="https://l5cfglaebpobj.vcdn.cloud/ha-noi-2030-2/{z}/{x}/{y}.png"
+                opacity={0.5}
+              />
+            )}
             <AreaDrawer points={points} setPoints={setPoints} isDrawing={isDrawing} />
             {points.length > 0 && points.map((pt, idx) => (
               <Marker key={idx} position={[pt.lat, pt.lng]} />
