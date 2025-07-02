@@ -103,3 +103,15 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  /* overflow: hidden; */
+}
+
+/* Đẩy control zoom của leaflet xuống dưới topbar */
+.leaflet-top.leaflet-left {
+  top: 80px !important;
+}

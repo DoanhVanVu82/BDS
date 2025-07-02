@@ -1,4 +1,4 @@
-import { MapContainer, TileLayer, Marker, Popup, Polygon } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polygon, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useState } from 'react';
 
@@ -29,6 +29,33 @@ const Map = ({ shape, amenities }: MapProps) => {
   } else {
     centroid = { lat: 10.762622, lng: 106.660172 };
   }
+  // State for map center
+  const [mapCenter, setMapCenter] = useState(centroid);
+  // Component to track map center
+  function CenterTracker() {
+    useMapEvents({
+      moveend: (e) => {
+        const c = e.target.getCenter();
+        setMapCenter({ lat: c.lat, lng: c.lng });
+      }
+    });
+    return null;
+  }
+
+  // Xác định thành phố dựa trên centroid
+  function getPlanningLayerUrl(lat: number, lng: number) {
+    // Hà Nội: lat 20.8–21.2, lng 105.7–106.1
+    if (lat >= 20.8 && lat <= 21.2 && lng >= 105.7 && lng <= 106.1) {
+      return 'https://l5cfglaebpobj.vcdn.cloud/ha-noi-2030-2/{z}/{x}/{y}.png';
+    }
+    // Hồ Chí Minh: lat 10.6–11.2, lng 106.3–107.0
+    if (lat >= 10.6 && lat <= 11.2 && lng >= 106.3 && lng <= 107.0) {
+      return 'https://sqhkt-qlqh.tphcm.gov.vn/api/tiles/bandoso/{z}/{x}/{y}.png';
+    }
+    // Default: Hà Nội
+    return 'https://l5cfglaebpobj.vcdn.cloud/ha-noi-2030-2/{z}/{x}/{y}.png';
+  }
+
   return (
     <div style={{ position: 'relative' }}>
       <button
@@ -43,23 +70,26 @@ const Map = ({ shape, amenities }: MapProps) => {
       >
         {planning ? 'Tắt quy hoạch' : 'Quy hoạch'}
       </button>
-      // @ts-expect-error: center is a valid prop at runtime
-      <MapContainer center={[centroid.lat, centroid.lng]} zoom={satellite ? 18 : 17} maxZoom={satellite ? 20 : 19} style={{ height: 250, width: '100%', borderRadius: 12 }}>
+      <MapContainer center={[mapCenter.lat, mapCenter.lng]} zoom={satellite ? 18 : 17} maxZoom={20} style={{ height: 250, width: '100%', borderRadius: 12 }}>
         <TileLayer
           url={satellite
             ? 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
-            : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+            : 'http://mts1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}'
           }
-          // @ts-expect-error: attribution is a valid prop at runtime
+          // @ts-ignore
           attribution={satellite
             ? 'Tiles © Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
             : undefined
           }
-          maxZoom={satellite ? 20 : 19}
+          maxNativeZoom={satellite ? 19 : 19}
+          maxZoom={20}
         />
+        <CenterTracker />
         {planning && (
           <TileLayer
-            url="https://l5cfglaebpobj.vcdn.cloud/ha-noi-2030-2/{z}/{x}/{y}.png"
+            url={getPlanningLayerUrl(mapCenter.lat, mapCenter.lng)}
+            maxNativeZoom={18}
+            maxZoom={20}
             opacity={0.5}
           />
         )}
