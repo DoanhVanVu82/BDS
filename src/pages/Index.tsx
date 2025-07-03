@@ -34,16 +34,15 @@ const Index = () => {
     setTimeout(() => {
       const land = mockLandDataList.find(l => l.address === address);
       if (land) {
-        setSelectedLand(land);
+        navigate('/property-form', { state: { ...land } });
       } else {
-        // Nếu không có trong mock, tạo LandData tạm
+        // Nếu không có trong mock, tạo LandData tạm và truyền qua state
         const tempLand: LandData = {
           id: 'custom-search',
           address: address,
           area: 0,
           plotNumber: '',
           shape: lat && lng ? [{ lat, lng }] : [],
-          frontDirection: '',
           fullAddress: address,
           landType: '',
           legalStatus: '',
@@ -60,10 +59,9 @@ const Index = () => {
           liquidityDays: 0,
           averagePrice: 0
         };
-        setSelectedLand(tempLand);
+        navigate('/property-form', { state: { ...tempLand } });
       }
       setIsSearching(false);
-      navigate('/results');
     }, 800);
   };
 
@@ -88,7 +86,7 @@ const Index = () => {
                 Định Giá Bất Động Sản
               </h1>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
-                Tra cứu thông tin chi tiết và ước tính giá trị bất động sản tại Việt Nam
+                Tra cứu thông tin và ước tính giá trị bất động sản tại Việt Nam
               </p>           
             </div>
             
@@ -104,11 +102,12 @@ const Index = () => {
         );
 
       case 'results':
+        const formData = location.state?.formData;
         return (
           <div className="container mx-auto px-4 py-8">          
             <div className="grid lg:grid-cols-2 gap-8">
-              <LandDetails land={selectedLand!} />
-              <PriceAnalysis land={selectedLand!} />
+              <LandDetails land={formData} />
+              <PriceAnalysis land={formData} />
             </div>
           </div>
         );

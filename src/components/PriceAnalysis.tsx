@@ -1,22 +1,28 @@
-
 import { 
   TrendingUp, 
   DollarSign, 
   Clock, 
   BarChart3,
   ArrowUp,
-  ArrowDown
+  ArrowDown,
+  ChevronDown,
+  ChevronUp
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { LandData } from "@/data/landData";
+import { useState } from "react";
+import ValuationNarrative from "./ValuationNarrative";
 
 interface PriceAnalysisProps {
   land: LandData;
 }
 
 const PriceAnalysis = ({ land }: PriceAnalysisProps) => {
+  const [showValuationNarrative, setShowValuationNarrative] = useState(false);
+  
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('vi-VN', {
       style: 'currency',
@@ -46,13 +52,13 @@ const PriceAnalysis = ({ land }: PriceAnalysisProps) => {
   ];
 
   const currentPrice = land.priceEstimate.pricePerM2;
-  const previousPrice = 82000000; // Mock previous price
+  const previousPrice = 55000000; // Mock previous price
   const priceChange = ((currentPrice - previousPrice) / previousPrice * 100);
 
   return (
     <div className="space-y-6">
       <Card className="bg-white shadow-xl border-0 rounded-2xl overflow-hidden">
-        <CardHeader className="bg-gradient-to-r from-emerald-500 to-blue-500 text-white pb-6">
+        <CardHeader className="bg-blue-600 text-white pb-6">
           <CardTitle className="text-2xl font-bold flex items-center gap-3">
             <DollarSign className="w-7 h-7" />
             Ước tính giá trị
@@ -60,29 +66,29 @@ const PriceAnalysis = ({ land }: PriceAnalysisProps) => {
         </CardHeader>
         <CardContent className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="text-center p-6 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl border border-green-100">
+            <div className="text-center p-6 bg-blue-100 rounded-xl border border-blue-100">
               <p className="text-sm font-medium text-gray-600 mb-2">Giá / m²</p>
-              <p className="text-2xl font-bold text-green-600">
-                {formatShortCurrency(land.priceEstimate.pricePerM2)}
+              <p className="text-2xl font-bold text-blue-600">
+                {formatCurrency(land.priceEstimate.pricePerM2)}
               </p>
               <div className="flex items-center justify-center gap-1 mt-2">
                 {priceChange > 0 ? (
-                  <ArrowUp className="w-4 h-4 text-green-500" />
+                  <ArrowUp className="w-4 h-4 text-blue-500" />
                 ) : (
                   <ArrowDown className="w-4 h-4 text-red-500" />
                 )}
                 <span className={`text-sm font-medium ${
-                  priceChange > 0 ? 'text-green-600' : 'text-red-600'
+                  priceChange > 0 ? 'text-blue-600' : 'text-red-600'
                 }`}>
                   {Math.abs(priceChange).toFixed(1)}%
                 </span>
               </div>
             </div>
 
-            <div className="text-center p-6 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
+            <div className="text-center p-6 bg-blue-50 rounded-xl border border-blue-100">
               <p className="text-sm font-medium text-gray-600 mb-2">Tổng giá trị</p>
               <p className="text-2xl font-bold text-blue-600">
-                {formatShortCurrency(land.priceEstimate.totalValue)}
+                {formatCurrency(land.priceEstimate.totalValue)}
               </p>
               <Badge 
                 variant="outline" 
@@ -103,7 +109,7 @@ const PriceAnalysis = ({ land }: PriceAnalysisProps) => {
               <BarChart3 className="w-6 h-6 text-purple-500 mx-auto mb-2" />
               <p className="text-sm text-gray-600">Giá TB khu vực</p>
               <p className="text-lg font-semibold text-gray-800">
-                {formatShortCurrency(land.averagePrice)}
+                {formatCurrency(land.averagePrice)}
               </p>
             </div>
           </div>
@@ -111,7 +117,7 @@ const PriceAnalysis = ({ land }: PriceAnalysisProps) => {
       </Card>
 
       <Card className="bg-white shadow-xl border-0 rounded-2xl overflow-hidden">
-        <CardHeader className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+        <CardHeader className="bg-purple-600 text-white">
           <CardTitle className="text-xl font-bold flex items-center gap-3">
             <TrendingUp className="w-6 h-6" />
             Xu hướng giá đất (triệu VNĐ/m²)
@@ -147,8 +153,37 @@ const PriceAnalysis = ({ land }: PriceAnalysisProps) => {
         </CardContent>
       </Card>
 
+      {/* Valuation Narrative với toggle */}
       <Card className="bg-white shadow-xl border-0 rounded-2xl overflow-hidden">
-        <CardHeader className="bg-gradient-to-r from-teal-500 to-cyan-500 text-white">
+        <CardHeader className="bg-blue-600 text-white">
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-xl font-bold flex items-center gap-3">
+              <BarChart3 className="w-6 h-6" />
+              Phân tích chi tiết định giá
+            </CardTitle>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowValuationNarrative(!showValuationNarrative)}
+              className="text-white hover:bg-white/20"
+            >
+              {showValuationNarrative ? (
+                <ChevronUp className="w-5 h-5" />
+              ) : (
+                <ChevronDown className="w-5 h-5" />
+              )}
+            </Button>
+          </div>
+        </CardHeader>
+        {showValuationNarrative && (
+          <CardContent className="p-0">
+            <ValuationNarrative land={land} />
+          </CardContent>
+        )}
+      </Card>
+
+      <Card className="bg-white shadow-xl border-0 rounded-2xl overflow-hidden">
+        <CardHeader className="bg-cyan-600 text-white">
           <CardTitle className="text-xl font-bold">Giao dịch gần đây</CardTitle>
         </CardHeader>
         <CardContent className="p-6">
@@ -166,11 +201,11 @@ const PriceAnalysis = ({ land }: PriceAnalysisProps) => {
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="font-bold text-green-600">
-                      {formatShortCurrency(transaction.price)}
+                    <p className="font-bold text-blue-600">
+                      {formatCurrency(transaction.price)}
                     </p>
                     <p className="text-sm text-gray-600">
-                      {formatShortCurrency(transaction.price / transaction.area)}/m²
+                      {formatCurrency(transaction.price / transaction.area)}/m²
                     </p>
                   </div>
                 </div>
@@ -179,6 +214,7 @@ const PriceAnalysis = ({ land }: PriceAnalysisProps) => {
           </div>
         </CardContent>
       </Card>
+
     </div>
   );
 };

@@ -19,6 +19,10 @@ interface LandDetailsProps {
 }
 
 const LandDetails = ({ land }: LandDetailsProps) => {
+  if (!land) {
+    return <div className="text-red-500 p-4">Không có dữ liệu lô đất.</div>;
+  }
+
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('vi-VN', {
       style: 'currency',
@@ -29,7 +33,7 @@ const LandDetails = ({ land }: LandDetailsProps) => {
   return (
     <div className="space-y-6">
       <Card className="bg-white shadow-xl border-0 rounded-2xl overflow-hidden">
-        <CardHeader className="bg-gradient-to-r from-green-500 to-blue-500 text-white pb-6">
+        <CardHeader className="bg-blue-600 text-white pb-6">
           <CardTitle className="text-2xl font-bold flex items-center gap-3">
             <Home className="w-7 h-7" />
             Thông tin lô đất
@@ -39,7 +43,7 @@ const LandDetails = ({ land }: LandDetailsProps) => {
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div className="flex items-start gap-3">
-                <MapPin className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
+                <MapPin className="w-5 h-5 text-blue-600 mt-1 flex-shrink-0" />
                 <div>
                   <p className="font-semibold text-gray-800">Địa chỉ đầy đủ</p>
                   <p className="text-gray-600">{land.fullAddress}</p>
@@ -55,23 +59,44 @@ const LandDetails = ({ land }: LandDetailsProps) => {
               </div>
 
               <div className="flex items-start gap-3">
-                <Compass className="w-5 h-5 text-purple-600 mt-1 flex-shrink-0" />
-                <div>
-                  <p className="font-semibold text-gray-800">Hướng cửa chính</p>
-                  <Badge variant="outline" className="mt-1 bg-purple-50 text-purple-700 border-purple-200">
-                    {land.frontDirection}
-                  </Badge>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3">
                 <FileText className="w-5 h-5 text-orange-600 mt-1 flex-shrink-0" />
                 <div>
-                  <p className="font-semibold text-gray-800">Loại đất & Pháp lý</p>
+                  <p className="font-semibold text-gray-800">Thông tin & Pháp lý</p>
                   <p className="text-gray-600">{land.landType}</p>
-                  <Badge variant="outline" className="mt-1 bg-green-50 text-green-700 border-green-200">
+                  <Badge variant="outline" className="mt-1 bg-blue-50 text-blue-700 border-blue-200">
                     {land.legalStatus}
                   </Badge>
+                  {/* Thông tin loại bất động sản và chi tiết loại đó từ PropertyForm (làm thông tin con) */}
+                  {((land as any).type === 'dat-ban' || (land as any).type === 'nha-ban') && (
+                    <div className="mt-2 ml-4 border-l-2 border-blue-100 pl-4 text-sm">
+                      <div className="font-semibold text-blue-700 mb-1">Loại bất động sản: <span className="font-normal text-gray-700">{(land as any).type === 'dat-ban' ? 'Đất bán' : (land as any).type === 'nha-ban' ? 'Nhà bán' : '-'}</span></div>
+                      {(land as any).type === 'dat-ban' && (
+                        <ul className="space-y-1">
+                          <li><span className="font-medium">Loại đất:</span> {(land as any).loaiDat || '-'}</li>
+                          {(land as any).huongDat && (<li><span className="font-medium">Hướng đất:</span> {(land as any).huongDat}</li>)}
+                          {(land as any).viTriDat && (<li><span className="font-medium">Vị trí/Lối vào:</span> {(land as any).viTriDat}</li>)}
+                          {Array.isArray((land as any).dacDiemDat) && (land as any).dacDiemDat.length > 0 && (<li><span className="font-medium">Đặc điểm & Pháp lý:</span> {(land as any).dacDiemDat.join(', ')}</li>)}
+                          {Array.isArray((land as any).viewDat) && (land as any).viewDat.length > 0 && (<li><span className="font-medium">View/Hướng nhìn:</span> {(land as any).viewDat.join(', ')}</li>)}
+                          {Array.isArray((land as any).tiemNangDat) && (land as any).tiemNangDat.length > 0 && (<li><span className="font-medium">Mục đích sử dụng/Tiềm năng:</span> {(land as any).tiemNangDat.join(', ')}</li>)}
+                          {Array.isArray((land as any).loaiDuongDat) && (land as any).loaiDuongDat.length > 0 && (<li><span className="font-medium">Loại đường:</span> {(land as any).loaiDuongDat.join(', ')}</li>)}
+                        </ul>
+                      )}
+                      {(land as any).type === 'nha-ban' && (
+                        <ul className="space-y-1">
+                          <li><span className="font-medium">Loại hình nhà đất:</span> {(land as any).loaiNha || '-'}</li>
+                          {(land as any).soPhongNgu && (<li><span className="font-medium">Số phòng ngủ:</span> {(land as any).soPhongNgu}</li>)}
+                          {(land as any).soTang && (<li><span className="font-medium">Số tầng:</span> {(land as any).soTang}</li>)}
+                          {(land as any).huongCua && (<li><span className="font-medium">Hướng cửa chính:</span> {(land as any).huongCua}</li>)}
+                          {(land as any).viTriNha && (<li><span className="font-medium">Vị trí/Lối vào:</span> {(land as any).viTriNha}</li>)}
+                          {(land as any).noiThat && (<li><span className="font-medium">Tình trạng nội thất:</span> {(land as any).noiThat}</li>)}
+                          {Array.isArray((land as any).dacDiemNha) && (land as any).dacDiemNha.length > 0 && (<li><span className="font-medium">Đặc điểm & Tiện ích:</span> {(land as any).dacDiemNha.join(', ')}</li>)}
+                          {Array.isArray((land as any).viewNha) && (land as any).viewNha.length > 0 && (<li><span className="font-medium">View/Hướng nhìn:</span> {(land as any).viewNha.join(', ')}</li>)}
+                          {Array.isArray((land as any).tiemNangNha) && (land as any).tiemNangNha.length > 0 && (<li><span className="font-medium">Mục đích sử dụng/Tiềm năng:</span> {(land as any).tiemNangNha.join(', ')}</li>)}
+                          {Array.isArray((land as any).loaiDuongNha) && (land as any).loaiDuongNha.length > 0 && (<li><span className="font-medium">Loại đường:</span> {(land as any).loaiDuongNha.join(', ')}</li>)}
+                        </ul>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -94,17 +119,17 @@ const LandDetails = ({ land }: LandDetailsProps) => {
               </div>
 
               <div className="flex items-start gap-3">
-                <TrendingUp className="w-5 h-5 text-emerald-600 mt-1 flex-shrink-0" />
+                <TrendingUp className="w-5 h-5 text-blue-600 mt-1 flex-shrink-0" />
                 <div>
-                  <p className="font-semibold text-gray-800">Khả năng mở rộng</p>
+                  <p className="font-semibold text-gray-800">Nở hậu</p>
                   <Badge 
                     variant="outline" 
                     className={`mt-1 ${land.expansion 
-                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
+                      ? 'bg-blue-50 text-blue-700 border-blue-200' 
                       : 'bg-red-50 text-red-700 border-red-200'
                     }`}
                   >
-                    {land.expansion ? 'Có thể mở rộng' : 'Không thể mở rộng'}
+                    {land.expansion ? 'Có' : 'Không'}
                   </Badge>
                 </div>
               </div>
@@ -114,7 +139,7 @@ const LandDetails = ({ land }: LandDetailsProps) => {
       </Card>
 
       <Card className="bg-white shadow-xl border-0 rounded-2xl overflow-hidden">
-        <CardHeader className="bg-gradient-to-r from-blue-500 to-teal-500 text-white">
+        <CardHeader className="bg-blue-500 text-white">
           <CardTitle className="text-xl font-bold flex items-center gap-3">
             <MapIcon className="w-6 h-6" />
             Vị trí & Tiện ích xung quanh
@@ -128,18 +153,22 @@ const LandDetails = ({ land }: LandDetailsProps) => {
           <div>
             <h3 className="font-semibold text-gray-800 mb-4">Tiện ích công cộng gần đây:</h3>
             <div className="space-y-3">
-              {land.amenities.map((amenity, index) => (
-                <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-3 h-3 rounded-full ${
-                      amenity.type === 'hospital' ? 'bg-red-500' :
-                      amenity.type === 'school' ? 'bg-blue-500' : 'bg-green-500'
-                    }`}></div>
-                    <span className="font-medium text-gray-800">{amenity.name}</span>
+              {Array.isArray(land.amenities) && land.amenities.length > 0 ? (
+                land.amenities.map((amenity, index) => (
+                  <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-3 h-3 rounded-full ${
+                        amenity.type === 'hospital' ? 'bg-red-500' :
+                        amenity.type === 'school' ? 'bg-blue-500' : 'bg-green-500'
+                      }`}></div>
+                      <span className="font-medium text-gray-800">{amenity.name}</span>
+                    </div>
+                    <Badge variant="secondary">{amenity.distance} km</Badge>
                   </div>
-                  <Badge variant="secondary">{amenity.distance} km</Badge>
-                </div>
-              ))}
+                ))
+              ) : (
+                <div className="text-sm text-gray-500">Không có tiện ích</div>
+              )}
             </div>
           </div>
         </CardContent>

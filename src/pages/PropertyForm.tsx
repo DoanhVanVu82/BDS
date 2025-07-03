@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { MapContainer, Polygon, TileLayer } from "react-leaflet";
 import 'leaflet/dist/leaflet.css';
+import { Loader2 } from "lucide-react";
 
 const LAND_TYPES = [
   { value: "dat-ban", label: "Đất bán" },
@@ -20,8 +21,8 @@ const VI_TRI = ["Mặt phố/Mặt tiền đường", "Hẻm xe hơi", "Hẻm ba
 const VI_TRI_DAT = ["Mặt phố / Mặt tiền đường", "Hẻm xe hơi", "Hẻm ba gác", "Hẻm xe máy"];
 const DAC_DIEM_NHA = ["Căn góc", "Nhà mới xây", "Có thang máy", "Có sân vườn", "Có hồ bơi", "Có tầng hầm"];
 const VIEW = ["View công viên", "View hồ", "View sông", "View chợ", "View biển"];
-const TIEM_NANG_NHA = ["Tiệm kinh doanh", "Làm văn phòng", "Bán thời trang", "Làm nhà hàng", "Làm quán ăn", "Làm cửa hàng", "Làm kho xưởng", "Làm nhà trọ", "Kinh doanh dòng tiền", "Tiệm cho thuê", "Homestay", "Farmstay"];
-const TIEM_NANG_DAT = ["Tiệm kinh doanh", "Làm văn phòng", "Bán thời trang", "Làm nhà hàng", "Làm quán ăn", "Làm cửa hàng", "Làm kho xưởng", "Làm nhà trọ", "Kinh doanh dòng tiền", "Tiệm cho thuê"];
+const TIEM_NANG_NHA = ["Tiệm kinh doanh", "Làm văn phòng", "Bán thời trang", "Làm nhà hàng", "Làm quán ăn", "Làm cửa hàng", "Làm kho xưởng", "Làm nhà trọ", "Kinh doanh dòng tiền", "Tiện cho thuê", "Homestay", "Farmstay"];
+const TIEM_NANG_DAT = ["Tiệm kinh doanh", "Làm văn phòng", "Bán thời trang", "Làm nhà hàng", "Làm quán ăn", "Làm cửa hàng", "Làm kho xưởng", "Làm nhà trọ", "Kinh doanh dòng tiền", "Tiện cho thuê"];
 const DAC_DIEM_DAT = ["Lô góc", "Đất nền (chưa có công trình)", "Đất thổ vườn (kết hợp đất ở và đất vườn)", "Có thổ cư", "Full thổ cư"];
 
 function MultiChoice({ label, options, value, onChange }: { label: string, options: string[], value: string[], onChange: (v: string[]) => void }) {
@@ -50,7 +51,7 @@ function SingleSelect({ label, options, value, onChange }: { label: string, opti
     <div className="mb-4">
       <label className="font-semibold mb-2 block">{label}</label>
       <select
-        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-green-400"
+        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-400"
         value={value}
         onChange={e => onChange(e.target.value)}
       >
@@ -72,8 +73,8 @@ export default function PropertyForm() {
   const [lat, setLat] = useState(state.lat || "");
   const [lng, setLng] = useState(state.lng || "");
   const [type, setType] = useState("dat-ban");
-  const [area, setArea] = useState("");
-  const [width, setWidth] = useState("");
+  const [area, setArea] = useState(state.area || "");
+  const [width, setWidth] = useState(state.roadWidth || "");
   // Đất bán
   const [huongDat, setHuongDat] = useState("");
   const [loaiDat, setLoaiDat] = useState("");
@@ -93,52 +94,78 @@ export default function PropertyForm() {
   const [viewNha, setViewNha] = useState<string[]>([]);
   const [tiemNangNha, setTiemNangNha] = useState<string[]>([]);
   const [loaiDuongNha, setLoaiDuongNha] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Polygon giả lập (nếu có)
   const polygon = state.shape || [];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Gom dữ liệu và chuyển sang results
+    setIsLoading(true);
+    // Gom dữ liệu form và toàn bộ state (object polygon)
     const formData = {
-      address, lat, lng, type, area, width,
-      ...(type === "dat-ban" ? {
-        huongDat, loaiDat, dacDiemDat, viewDat, tiemNangDat, loaiDuongDat, viTriDat
-      } : {
-        soPhongNgu, huongCua, soTang, viTriNha, loaiNha, noiThat, dacDiemNha, viewNha, tiemNangNha, loaiDuongNha
-      })
+      ...state, // giữ lại toàn bộ dữ liệu polygon từ state
+      address, lat, lng, area, roadwidth: width, // các trường user có thể sửa
+      type,
+      loaiDat,
+      huongDat,
+      viTriDat,
+      dacDiemDat,
+      viewDat,
+      tiemNangDat,
+      loaiDuongDat,
+      soPhongNgu,
+      soTang,
+      huongCua,
+      viTriNha,
+      loaiNha,
+      noiThat,
+      dacDiemNha,
+      viewNha,
+      tiemNangNha,
+      loaiDuongNha
     };
-    navigate("/results", { state: { formData, polygon } });
+    setTimeout(() => {
+      setIsLoading(false);
+      navigate("/results", { state: { formData } });
+    }, 2000);
   };
 
   return (
     <form onSubmit={handleSubmit} className="max-w-5xl mx-auto py-8 px-2 grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+      {/* Overlay loading */}
+      {isLoading && (
+        <div className="fixed inset-0 z-[2000] flex flex-col items-center justify-center bg-black/30 backdrop-blur-sm">
+          <Loader2 className="w-16 h-16 text-blue-600 animate-spin mb-4" />
+          <div className="text-xl font-semibold text-blue-700">Đang định giá...</div>
+        </div>
+      )}
       {/* Cột 1: Thông tin cơ bản + bản đồ */}
       <div className="space-y-4">
         <Card className="p-6 space-y-4">
           <div className="font-bold text-xl mb-2">Thông tin cơ bản</div>
           <div className="mb-4">
             <label className="font-semibold mb-2 block">Địa chỉ</label>
-            <input className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-green-400" value={address} onChange={e => setAddress(e.target.value)} placeholder="Nhập địa chỉ" required />
+            <input className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-400" value={address} onChange={e => setAddress(e.target.value)} placeholder="Nhập địa chỉ" required />
           </div>
           <div className="flex gap-2">
             <div className="w-1/2">
               <label className="font-semibold mb-2 block">Vĩ độ (lat)</label>
-              <input className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-green-400" value={lat} onChange={e => setLat(e.target.value)} placeholder="Lat" required />
+              <input className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-400" value={lat} onChange={e => setLat(e.target.value)} placeholder="Lat" required />
             </div>
             <div className="w-1/2">
               <label className="font-semibold mb-2 block">Kinh độ (lng)</label>
-              <input className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-green-400" value={lng} onChange={e => setLng(e.target.value)} placeholder="Lng" required />
+              <input className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-400" value={lng} onChange={e => setLng(e.target.value)} placeholder="Lng" required />
             </div>
           </div>
           <div className="flex gap-2">
             <div className="w-1/2">
               <label className="font-semibold mb-2 block">Diện tích (m²)</label>
-              <input className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-green-400" value={area} onChange={e => setArea(e.target.value)} placeholder="Diện tích" required />
+              <input className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-400" value={area} onChange={e => setArea(e.target.value)} placeholder="Diện tích" required />
             </div>
             <div className="w-1/2">
               <label className="font-semibold mb-2 block">Chiều ngang (m)</label>
-              <input className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-green-400" value={width} onChange={e => setWidth(e.target.value)} placeholder="Chiều ngang" required />
+              <input className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-400" value={width} onChange={e => setWidth(e.target.value)} placeholder="Chiều ngang" required />
             </div>
           </div>
           <SingleSelect label="Loại" options={LAND_TYPES.map(l => l.label)} value={LAND_TYPES.find(l => l.value === type)?.label || ""} onChange={val => setType(LAND_TYPES.find(l => l.label === val)?.value || "dat-ban")} />
@@ -149,7 +176,7 @@ export default function PropertyForm() {
             <MapContainer center={lat && lng ? [parseFloat(lat), parseFloat(lng)] : [10.762622, 106.660172]} zoom={17} style={{ width: '100%', height: '100%' }} scrollWheelZoom={true}>
               <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
               {polygon.length > 2 && (
-                <Polygon positions={polygon.map((pt: any) => [pt.lat, pt.lng])} pathOptions={{ color: 'blue', weight: 2, fillOpacity: 0.2 }} />
+                <Polygon positions={polygon.map((pt: any) => [pt.lat, pt.lng])} pathOptions={{ color: 'red', weight: 2, fillOpacity: 0.2 }} />
               )}
             </MapContainer>
           </div>
@@ -173,11 +200,11 @@ export default function PropertyForm() {
             <div className="flex gap-2">
               <div className="w-1/2">
                 <label className="font-semibold mb-2 block">Số phòng ngủ</label>
-                <input className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-green-400" value={soPhongNgu} onChange={e => setSoPhongNgu(e.target.value)} placeholder="Số phòng ngủ" required />
+                <input className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-400" value={soPhongNgu} onChange={e => setSoPhongNgu(e.target.value)} placeholder="Số phòng ngủ" required />
               </div>
               <div className="w-1/2">
                 <label className="font-semibold mb-2 block">Số tầng</label>
-                <input className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-green-400" value={soTang} onChange={e => setSoTang(e.target.value)} placeholder="Số tầng" required />
+                <input className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-400" value={soTang} onChange={e => setSoTang(e.target.value)} placeholder="Số tầng" required />
               </div>
             </div>
             <SingleSelect label="Hướng cửa chính" options={HUONG_CUA} value={huongCua} onChange={setHuongCua} />
@@ -193,7 +220,7 @@ export default function PropertyForm() {
       </div>
       {/* Nút định giá full width, căn giữa, cuối trang */}
       <div className="col-span-1 md:col-span-2 flex justify-center mt-8">
-        <Button type="submit" className="w-full max-w-md h-14 text-lg bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 rounded-xl">Định giá</Button>
+        <Button type="submit" className="w-full max-w-md h-14 text-lg bg-blue-600 hover:bg-blue-700 rounded-xl text-white">Định giá</Button>
       </div>
     </form>
   );

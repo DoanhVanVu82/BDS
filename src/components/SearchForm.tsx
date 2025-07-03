@@ -27,9 +27,37 @@ const SearchForm = ({ onSearch, isSearching }: SearchFormProps) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (address.trim()) {
-      // Gọi onSearch nếu cần, hoặc chỉ chuyển trang
-      // onSearch(address.trim());
-      navigate('/property-form', { state: { address: address.trim(), lat: selectedLat, lng: selectedLng } });
+      // Tìm trong mockLandDataList
+      const land = mockLandDataList.find(l => l.address === address.trim());
+      if (land) {
+        navigate('/property-form', { state: { ...land, lat: selectedLat, lng: selectedLng } });
+      } else {
+        // Nếu không có, tạo object tạm
+        const tempLand = {
+          id: 'custom-search',
+          address: address.trim(),
+          area: 0,
+          plotNumber: '',
+          shape: selectedLat && selectedLng ? [{ lat: selectedLat, lng: selectedLng }] : [],
+          frontDirection: '',
+          fullAddress: address.trim(),
+          landType: '',
+          legalStatus: '',
+          amenities: [],
+          roadWidth: 0,
+          maxRooms: 0,
+          expansion: false,
+          priceEstimate: {
+            pricePerM2: 0,
+            totalValue: 0,
+            confidence: 0
+          },
+          recentTransactions: [],
+          liquidityDays: 0,
+          averagePrice: 0
+        };
+        navigate('/property-form', { state: { ...tempLand, lat: selectedLat, lng: selectedLng } });
+      }
     }
   };
 
@@ -136,12 +164,11 @@ const SearchForm = ({ onSearch, isSearching }: SearchFormProps) => {
       <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-visible">
         <div className="p-8 overflow-visible">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-blue-500 rounded-full flex items-center justify-center">
+            <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
               <MapPin className="w-6 h-6 text-white" />
             </div>
             <div>
               <h2 className="text-2xl font-bold text-gray-800">Nhập địa chỉ</h2>
-              <p className="text-gray-600">Tìm hiểu thông tin chi tiết về lô đất</p>
             </div>
           </div>
 
@@ -153,18 +180,18 @@ const SearchForm = ({ onSearch, isSearching }: SearchFormProps) => {
                 placeholder="Nhập địa chỉ đất (VD: 123 Nguyễn Huệ, Quận 1, TP.HCM)"
                 value={address}
                 onChange={handleInputChange}
-                className="pl-12 h-14 text-lg border-2 border-gray-200 focus:border-green-500 rounded-xl"
+                className="pl-12 h-14 text-lg border-2 border-gray-200 focus:border-blue-600 rounded-xl"
                 disabled={isSearching}
                 autoComplete="off"
                 onFocus={() => address.length > 2 && suggestions.length > 0 && setShowSuggestions(true)}
               />
-              {loading && <Loader2 className="absolute right-4 top-1/2 transform -translate-y-1/2 text-green-500 animate-spin w-5 h-5" />}
+              {loading && <Loader2 className="absolute right-4 top-1/2 transform -translate-y-1/2 text-blue-600 animate-spin w-5 h-5" />}
               {showSuggestions && suggestions.length > 0 && (
                 <ul className="absolute left-0 right-0 top-14 bg-white border border-gray-200 rounded-b-xl shadow-lg z-50 max-h-96 overflow-y-auto">
                   {suggestions.map((sug, idx) => (
                     <li
                       key={sug.properties.place_id || idx}
-                      className="p-3 hover:bg-green-50 cursor-pointer text-sm border-b border-gray-100 last:border-b-0"
+                      className="p-3 hover:bg-blue-50 cursor-pointer text-sm border-b border-gray-100 last:border-b-0"
                       onClick={() => handleSuggestionClick(sug)}
                     >
                       {sug.properties.formatted.replace(/,? ?\d{5},? ?Việt Nam$/, '').replace(/,? ?Việt Nam$/, '')}
@@ -176,7 +203,7 @@ const SearchForm = ({ onSearch, isSearching }: SearchFormProps) => {
             <Button 
               type="submit" 
               disabled={!address.trim() || isSearching}
-              className="w-full h-14 text-lg bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
+              className="w-full h-14 text-lg bg-blue-600 hover:bg-blue-700 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl text-white"
             >
               {isSearching ? (
                 <>

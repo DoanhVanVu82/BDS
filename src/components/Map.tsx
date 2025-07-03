@@ -58,18 +58,24 @@ const Map = ({ shape, amenities }: MapProps) => {
 
   return (
     <div style={{ position: 'relative' }}>
-      <button
-        onClick={() => setSatellite(s => !s)}
-        style={{ position: 'absolute', zIndex: 1000, right: 16, top: 16, background: '#fff', border: '1px solid #ccc', borderRadius: 6, padding: '6px 12px', fontWeight: 500, cursor: 'pointer', boxShadow: '0 2px 8px #0002' }}
-      >
-        {satellite ? 'Bản đồ thường' : 'Vệ tinh'}
-      </button>
-      <button
-        onClick={() => setPlanning(p => !p)}
-        style={{ position: 'absolute', zIndex: 1000, right: 16, top: 60, background: planning ? '#e0e7ff' : '#fff', border: '1px solid #ccc', borderRadius: 6, padding: '6px 12px', fontWeight: 500, cursor: 'pointer', boxShadow: '0 2px 8px #0002' }}
-      >
-        {planning ? 'Tắt quy hoạch' : 'Quy hoạch'}
-      </button>
+      {/* Nút vệ tinh và quy hoạch */}
+      <div style={{ position: 'absolute', zIndex: 1000, right: 16, top: 16 }} className="flex flex-col gap-4">
+        <button
+          onClick={() => setSatellite(s => !s)}
+          className={`w-12 h-12 flex items-center justify-center rounded-full shadow-lg bg-white border-0 transition hover:bg-blue-50 ${satellite ? 'ring-2 ring-blue-400' : ''}`}
+          title="Chế độ vệ tinh"
+        >
+          <span className="sr-only">Chế độ vệ tinh</span>
+          <svg xmlns="http://www.w3.org/2000/svg" className={`w-6 h-6 ${satellite ? 'text-blue-600' : 'text-gray-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+        </button>
+        <button
+          onClick={() => setPlanning(p => !p)}
+          className={`w-12 h-12 flex items-center justify-center rounded-full shadow-lg bg-white border-0 transition hover:bg-blue-50 ${planning ? 'ring-2 ring-blue-400' : ''}`}
+          title="Lớp quy hoạch"
+        >
+          <span className={`w-6 h-6 block rounded bg-blue-400 opacity-80 ${planning ? '' : 'grayscale'}`}></span>
+        </button>
+      </div>
       <MapContainer center={[mapCenter.lat, mapCenter.lng]} zoom={satellite ? 18 : 17} maxZoom={20} style={{ height: 250, width: '100%', borderRadius: 12 }}>
         <TileLayer
           url={satellite
@@ -90,7 +96,7 @@ const Map = ({ shape, amenities }: MapProps) => {
             url={getPlanningLayerUrl(mapCenter.lat, mapCenter.lng)}
             maxNativeZoom={18}
             maxZoom={20}
-            opacity={0.5}
+            // opacity={1.0}
           />
         )}
         {Array.isArray(shape) && shape.length >= 3 && (
@@ -98,13 +104,6 @@ const Map = ({ shape, amenities }: MapProps) => {
             positions={shape.map(p => [p.lat, p.lng])}
             pathOptions={{ color: 'red', weight: 2, fillOpacity: 0.2 }}
           />
-        )}
-        {Array.isArray(shape) && shape.length > 0 && (
-          <Marker position={[centroid.lat, centroid.lng]}>
-            <Popup>
-              {centroid.lat.toFixed(6)}, {centroid.lng.toFixed(6)}
-            </Popup>
-          </Marker>
         )}
         {amenities && amenities.map((amenity, idx) => {
           // Ước lượng vị trí tiện ích dựa trên khoảng cách và loại (giả lập hướng)

@@ -25,7 +25,6 @@ export interface Amenity {
     area: number;
     plotNumber: string;
     shape: { lat: number; lng: number }[];
-    frontDirection: string;
     fullAddress: string;
     landType: string;
     legalStatus: string;
@@ -42,285 +41,206 @@ export interface Amenity {
   // Bổ sung lượng lớn dữ liệu mẫu
   export const mockLandDataList: LandData[] = [
     // --- Dữ liệu tại TP.HCM ---
-    {
-      id: "hcm001",
-      address: "Thửa 90 Tờ 10, Phường Văn Quán, Hà Đông, Hà Nội",
-      area: 6194.87,
-      plotNumber: "90/10",
-      shape: [
-        { lat: 20.97999431, lng: 105.78811974 },
-        { lat: 20.97998937, lng: 105.78811398 },
-        { lat: 20.97998652, lng: 105.78811616 },
-        { lat: 20.97997637, lng: 105.78812396 },
-        { lat: 20.97993773, lng: 105.78815359 },
-        { lat: 20.97989188, lng: 105.78818876 },
-        { lat: 20.97984615, lng: 105.78822384 },
-        { lat: 20.97979961, lng: 105.78825955 },
-        { lat: 20.97974697, lng: 105.78829993 },
-        { lat: 20.97971735, lng: 105.78832266 },
-        { lat: 20.97969393, lng: 105.78834061 },
-        { lat: 20.97968825, lng: 105.78834577 },
-        { lat: 20.97966491, lng: 105.78836697 },
-        { lat: 20.97966038, lng: 105.78837082 },
-        { lat: 20.97963224, lng: 105.78839476 },
-        { lat: 20.97936453, lng: 105.78812075 },
-        { lat: 20.97909079, lng: 105.78778117 },
-        { lat: 20.97917896, lng: 105.78770162 },
-        { lat: 20.97919828, lng: 105.78768258 },
-        { lat: 20.9792379, lng: 105.78764599 },
-        { lat: 20.97929044, lng: 105.78759747 },
-        { lat: 20.97928393, lng: 105.78758946 },
-        { lat: 20.97928817, lng: 105.78758562 },
-        { lat: 20.9793969, lng: 105.78748694 },
-        { lat: 20.97940033, lng: 105.78748382 },
-        { lat: 20.97923, lng: 105.78727086 },
-        { lat: 20.97935469, lng: 105.78716108 },
-        { lat: 20.980069, lng: 105.78805288 },
-        { lat: 20.97999431, lng: 105.78811974 }
-      ],
-      frontDirection: "Đông Nam",
-      fullAddress: "Thửa 270 Tờ 22, Xã Thới Tam Thôn, Huyện Hóc Môn, TP.Hồ Chí Minh",
-      landType: "Đất xây dựng công trình sự nghiệp khác",
-      legalStatus: "Sổ đỏ chính chủ",
-      amenities: [
-        { name: "Bệnh viện Nhi Đồng 2", distance: 1.5, type: "hospital" },
-        { name: "Trường THPT Trưng Vương", distance: 1.2, type: "school" },
-        { name: "Chợ Bến Thành", distance: 0.8, type: "market" }
-      ],
-      roadWidth: 20,
-      maxRooms: 6,
-      expansion: true,
-      priceEstimate: {
-        pricePerM2: 850000000,
-        totalValue: 102000000000,
-        confidence: 92
-      },
-      recentTransactions: [
-        { id: "tx001", date: "2025-01-15", area: 115, price: 95000000000, distance: 150, address: "Số 12 Đồng Khởi" },
-        { id: "tx002", date: "2025-02-20", area: 130, price: 112000000000, distance: 200, address: "Số 45 Hai Bà Trưng" }
-      ],
-      liquidityDays: 30,
-      averagePrice: 845000000
+    // 1. Thửa 3 Tờ 82
+  {
+    id: "hcm002",
+    address: "Thửa 3 Tờ 82, Phường Dương Nội, Hà Đông, Hà Nội",
+    area: 178.6,
+    plotNumber: "3/82",
+    shape: [
+      { lat: 20.98055188515, lng: 105.75377704898 },
+      { lat: 20.980500150636, lng: 105.75371100744 },
+      { lat: 20.980636992587, lng: 105.75358830429 },
+      { lat: 20.980689717288, lng: 105.75365512019 },
+      { lat: 20.98055188515, lng: 105.75377704898 }
+    ],
+    fullAddress: "Thửa 3 Tờ 82, Phường Dương Nội, Hà Đông, Hà Nội",
+    landType: "Đất ở tại đô thị",
+    legalStatus: "Sổ đỏ chính chủ",
+    amenities: [
+      { name: "Bệnh viện Hà Đông", distance: 2.0, type: "hospital" },
+      { name: "Trường THPT Lê Lợi", distance: 1.5, type: "school" },
+      { name: "Chợ Hà Đông", distance: 1.0, type: "market" }
+    ],
+    roadWidth: 15,
+    maxRooms: 4,
+    expansion: true,
+    priceEstimate: {
+      pricePerM2: 60000000,
+      totalValue: 10716000000,
+      confidence: 90
     },
-    {
-      id: "hcm002",
-      address: "456 Lê Lợi, Quận 3, TP.HCM",
-      area: 80,
-      plotNumber: "88A/12",
-      shape: [
-        { lat: 10.730904403049, lng: 106.58126230664 },
-        { lat: 10.730827197888, lng: 106.58126182143 },
-        { lat: 10.730828862898, lng: 106.58111235427 },
-        { lat: 10.730835110858, lng: 106.58110862311 },
-        { lat: 10.730829671156, lng: 106.58094514927 },
-        { lat: 10.730843955884, lng: 106.58094491402 },
-        { lat: 10.730845807692, lng: 106.5809285549 },
-        { lat: 10.730893821311, lng: 106.58092548633 },
-        { lat: 10.730898252741, lng: 106.58099260074 },
-        { lat: 10.730904403049, lng: 106.58126230664 }
-      ],
-      frontDirection: "Tây Bắc",
-      fullAddress: "456 Lê Lợi, Phường 6, Quận 3, TP.HCM",
-      landType: "Đất ở đô thị",
-      legalStatus: "Sổ hồng",
-      amenities: [
-        { name: "Bệnh viện Bình Dân", distance: 2.1, type: "hospital" },
-        { name: "Trường THCS Lê Quý Đôn", distance: 0.5, type: "school" },
-        { name: "Công viên Tao Đàn", distance: 1.0, type: "park" }
-      ],
-      roadWidth: 8,
-      maxRooms: 4,
-      expansion: false,
-      priceEstimate: {
-        pricePerM2: 350000000,
-        totalValue: 28000000000,
-        confidence: 88
-      },
-      recentTransactions: [
-        { id: "tx003", date: "2025-03-10", area: 75, price: 25500000000, distance: 300, address: "Hẻm 120 Võ Văn Tần" }
-      ],
-      liquidityDays: 45,
-      averagePrice: 340000000
+    recentTransactions: [
+      { id: "tx003", date: "2025-03-10", area: 180, price: 11000000000, distance: 200, address: "Thửa 5 Tờ 82" },
+      { id: "tx004", date: "2025-04-15", area: 175, price: 10500000000, distance: 250, address: "Thửa 4 Tờ 82" }
+    ],
+    liquidityDays: 45,
+    averagePrice: 59500000
+  },
+
+  // 2. Thửa 1 Tờ 89
+  {
+    id: "hcm003",
+    address: "Thửa 1 Tờ 89, Phường Dương Nội, Hà Đông, Hà Nội",
+    area: 6675.1,
+    plotNumber: "1/89",
+    shape: [
+      { lat: 20.977598659932, lng: 105.75070525772 },
+      { lat: 20.977678026056, lng: 105.75071180908 },
+      { lat: 20.978477548447, lng: 105.75172185077 },
+      { lat: 20.978455966288, lng: 105.7518025267 },
+      { lat: 20.978215761425, lng: 105.75201463266 },
+      { lat: 20.978170074946, lng: 105.75201065339 },
+      { lat: 20.977370554223, lng: 105.75100061234 },
+      { lat: 20.977358456395, lng: 105.75091736432 },
+      { lat: 20.977598659932, lng: 105.75070525772 }
+    ],
+    fullAddress: "Thửa 1 Tờ 89, Phường Dương Nội, Hà Đông, Hà Nội",
+    landType: "Đất ở tại đô thị",
+    legalStatus: "Sổ đỏ chính chủ",
+    amenities: [
+      { name: "Bệnh viện Hà Đông", distance: 2.5, type: "hospital" },
+      { name: "Trường THCS Dương Nội", distance: 1.8, type: "school" },
+      { name: "Chợ Dương Nội", distance: 1.2, type: "market" }
+    ],
+    roadWidth: 25,
+    maxRooms: 8,
+    expansion: true,
+    priceEstimate: {
+      pricePerM2: 55000000,
+      totalValue: 367130500000,
+      confidence: 88
     },
-    {
-      id: "hcm003",
-      address: "789 Cách Mạng Tháng Tám, Quận 10, TP.HCM",
-      area: 250,
-      plotNumber: "12",
-      shape: [
-        { lat: 10.7742, lng: 106.6658 },
-        { lat: 10.7742, lng: 106.6662 },
-        { lat: 10.7738, lng: 106.6662 },
-        { lat: 10.7738, lng: 106.6658 },
-        { lat: 10.7742, lng: 106.6658 }
-      ],
-      frontDirection: "Nam",
-      fullAddress: "789 Cách Mạng Tháng Tám, Phường 15, Quận 10, TP.HCM",
-      landType: "Đất thương mại dịch vụ",
-      legalStatus: "Giấy tờ tay",
-      amenities: [
-        { name: "Bệnh viện 115", distance: 0.7, type: "hospital" },
-        { name: "Siêu thị Big C Miền Đông", distance: 0.5, type: "market" },
-        { name: "Ga Sài Gòn", distance: 2.0, type: "transport" }
-      ],
-      roadWidth: 15,
-      maxRooms: 10,
-      expansion: true,
-      priceEstimate: {
-        pricePerM2: 280000000,
-        totalValue: 70000000000,
-        confidence: 75
-      },
-      recentTransactions: [
-          { id: "tx004", date: "2025-04-01", area: 240, price: 65000000000, distance: 50, address: "Mặt tiền Tô Hiến Thành" },
-          { id: "tx005", date: "2025-05-22", area: 260, price: 72000000000, distance: 100, address: "Góc Sư Vạn Hạnh" }
-      ],
-      liquidityDays: 60,
-      averagePrice: 275000000
+    recentTransactions: [
+      { id: "tx005", date: "2025-02-25", area: 6700, price: 370000000000, distance: 300, address: "Thửa 2 Tờ 89" },
+      { id: "tx006", date: "2025-05-10", area: 6650, price: 365000000000, distance: 350, address: "Thửa 3 Tờ 89" }
+    ],
+    liquidityDays: 60,
+    averagePrice: 54500000
+  },
+
+  // 3. Thửa 63 Tờ 82
+  {
+    id: "hcm004",
+    address: "Thửa 63 Tờ 82, Phường Dương Nội, Hà Đông, Hà Nội",
+    area: 6659.7,
+    plotNumber: "63/82",
+    shape: [
+      { lat: 20.979414677375, lng: 105.75294561315 },
+      { lat: 20.979419754971, lng: 105.75302296078 },
+      { lat: 20.979171840211, lng: 105.75324204795 },
+      { lat: 20.979121278081, lng: 105.75323765914 },
+      { lat: 20.978441998359, lng: 105.75236813623 },
+      { lat: 20.978308800439, lng: 105.75219763112 },
+      { lat: 20.978318434675, lng: 105.75214315027 },
+      { lat: 20.978572600667, lng: 105.75191947749 },
+      { lat: 20.978636439362, lng: 105.75192412461 },
+      { lat: 20.979414677375, lng: 105.75294561315 }
+    ],
+    fullAddress: "Thửa 63 Tờ 82, Phường Dương Nội, Hà Đông, Hà Nội",
+    landType: "Đất ở tại đô thị",
+    legalStatus: "Sổ đỏ chính chủ",
+    amenities: [
+      { name: "Bệnh viện 103", distance: 3.0, type: "hospital" },
+      { name: "Trường Tiểu học Dương Nội", distance: 2.2, type: "school" },
+      { name: "Chợ Hà Đông", distance: 1.5, type: "market" }
+    ],
+    roadWidth: 22,
+    maxRooms: 7,
+    expansion: true,
+    priceEstimate: {
+      pricePerM2: 58000000,
+      totalValue: 386262600000,
+      confidence: 89
     },
-    // --- Dữ liệu tại Hà Nội ---
-    {
-      id: "hn001",
-      address: "25 Phố Huế, Hai Bà Trưng, Hà Nội",
-      area: 95,
-      plotNumber: "55/HBT",
-      shape: [
-        { lat: 21.0167, lng: 105.8523 },
-        { lat: 21.0167, lng: 105.8527 },
-        { lat: 21.0163, lng: 105.8527 },
-        { lat: 21.0163, lng: 105.8523 },
-        { lat: 21.0167, lng: 105.8523 }
-      ],
-      frontDirection: "Đông",
-      fullAddress: "25 Phố Huế, Phường Hàng Bài, Quận Hoàn Kiếm, Hà Nội",
-      landType: "Đất ở đô thị",
-      legalStatus: "Sổ đỏ chính chủ",
-      amenities: [
-        { name: "Bệnh viện Việt Đức", distance: 1.0, type: "hospital" },
-        { name: "Trường THPT Việt Đức", distance: 0.8, type: "school" },
-        { name: "Hồ Hoàn Kiếm", distance: 1.2, type: "park" }
-      ],
-      roadWidth: 12,
-      maxRooms: 5,
-      expansion: false,
-      priceEstimate: {
-        pricePerM2: 600000000,
-        totalValue: 57000000000,
-        confidence: 95
-      },
-      recentTransactions: [
-        { id: "tx006", date: "2025-06-18", area: 100, price: 61000000000, distance: 100, address: "Số 10 Hàng Bài" }
-      ],
-      liquidityDays: 40,
-      averagePrice: 590000000
+    recentTransactions: [
+      { id: "tx007", date: "2025-01-20", area: 6600, price: 380000000000, distance: 250, address: "Thửa 62 Tờ 82" },
+      { id: "tx008", date: "2025-03-05", area: 6700, price: 390000000000, distance: 300, address: "Thửa 64 Tờ 82" }
+    ],
+    liquidityDays: 55,
+    averagePrice: 57500000
+  },
+
+  // 4. Thửa 39 Tờ 89
+  {
+    id: "hcm005",
+    address: "Thửa 39 Tờ 89, Phường Dương Nội, Hà Đông, Hà Nội",
+    area: 8100.9,
+    plotNumber: "39/89",
+    shape: [
+      { lat: 20.977481287348, lng: 105.75042760373 },
+      { lat: 20.977463948506, lng: 105.7505293619 },
+      { lat: 20.976438380692, lng: 105.75143708639 },
+      { lat: 20.976374638644, lng: 105.75143099752 },
+      { lat: 20.976189079434, lng: 105.75119272267 },
+      { lat: 20.976132046165, lng: 105.75111954092 },
+      { lat: 20.976135710291, lng: 105.75106695435 },
+      { lat: 20.976189844612, lng: 105.75101913993 },
+      { lat: 20.977171060207, lng: 105.75015264209 },
+      { lat: 20.977248674964, lng: 105.75014668222 },
+      { lat: 20.977481287348, lng: 105.75042760373 }
+    ],
+    fullAddress: "Thửa 39 Tờ 89, Phường Dương Nội, Hà Đông, Hà Nội",
+    landType: "Đất ở tại đô thị",
+    legalStatus: "Sổ đỏ chính chủ",
+    amenities: [
+      { name: "Bệnh viện Hà Đông", distance: 2.8, type: "hospital" },
+      { name: "Trường THPT Nguyễn Huệ", distance: 2.0, type: "school" },
+      { name: "Chợ Dương Nội", distance: 1.3, type: "market" }
+    ],
+    roadWidth: 30,
+    maxRooms: 10,
+    expansion: true,
+    priceEstimate: {
+      pricePerM2: 52000000,
+      totalValue: 421246800000,
+      confidence: 87
     },
-    {
-      id: "hn002",
-      address: "102 Trần Duy Hưng, Cầu Giấy, Hà Nội",
-      area: 150,
-      plotNumber: "CG-88",
-      shape: [
-        { lat: 21.0078, lng: 105.8023 },
-        { lat: 21.0078, lng: 105.8027 },
-        { lat: 21.0074, lng: 105.8027 },
-        { lat: 21.0074, lng: 105.8023 },
-        { lat: 21.0078, lng: 105.8023 }
-      ],
-      frontDirection: "Tây",
-      fullAddress: "102 Trần Duy Hưng, Phường Trung Hoà, Quận Cầu Giấy, Hà Nội",
-      landType: "Đất dự án",
-      legalStatus: "Đang chờ sổ",
-      amenities: [
-        { name: "Bệnh viện Giao thông Vận tải", distance: 2.5, type: "hospital" },
-        { name: "Trường THPT Chuyên Hà Nội - Amsterdam", distance: 1.0, type: "school" },
-        { name: "Siêu thị Big C Thăng Long", distance: 0.5, type: "market" }
-      ],
-      roadWidth: 30,
-      maxRooms: 8,
-      expansion: true,
-      priceEstimate: {
-        pricePerM2: 450000000,
-        totalValue: 67500000000,
-        confidence: 85
-      },
-      recentTransactions: [
-          { id: "tx007", date: "2025-02-11", area: 145, price: 64000000000, distance: 250, address: "Ngã tư Hoàng Đạo Thuý" },
-          { id: "tx008", date: "2025-04-29", area: 160, price: 70000000000, distance: 300, address: "Đối diện Grand Plaza" }
-      ],
-      liquidityDays: 55,
-      averagePrice: 440000000
+    recentTransactions: [
+      { id: "tx009", date: "2025-04-01", area: 8000, price: 415000000000, distance: 400, address: "Thửa 40 Tờ 89" },
+      { id: "tx010", date: "2025-05-20", area: 8200, price: 430000000000, distance: 350, address: "Thửa 38 Tờ 89" }
+    ],
+    liquidityDays: 65,
+    averagePrice: 51500000
+  },
+
+  // 5. Thửa 38 Tờ 89
+  {
+    id: "hcm006",
+    address: "Thửa 38 Tờ 89, Phường Dương Nội, Hà Đông, Hà Nội",
+    area: 3218.3,
+    plotNumber: "38/89",
+    shape: [
+      { lat: 20.976328725565, lng: 105.74965345129 },
+      { lat: 20.976330061581, lng: 105.74963720523 },
+      { lat: 20.976852214603, lng: 105.74963980947 },
+      { lat: 20.9771245473, lng: 105.74998757378 },
+      { lat: 20.97711484137, lng: 105.75005849914 },
+      { lat: 20.976861314662, lng: 105.75028111837 },
+      { lat: 20.976812026238, lng: 105.75027462126 },
+      { lat: 20.976328725565, lng: 105.74965345129 }
+    ],
+    fullAddress: "Thửa 38 Tờ 89, Phường Dương Nội, Hà Đông, Hà Nội",
+    landType: "Đất ở tại đô thị",
+    legalStatus: "Sổ đỏ chính chủ",
+    amenities: [
+      { name: "Bệnh viện 103", distance: 3.2, type: "hospital" },
+      { name: "Trường THCS Dương Nội", distance: 1.7, type: "school" },
+      { name: "Chợ Hà Đông", distance: 1.4, type: "market" }
+    ],
+    roadWidth: 18,
+    maxRooms: 6,
+    expansion: true,
+    priceEstimate: {
+      pricePerM2: 54000000,
+      totalValue: 173788200000,
+      confidence: 88
     },
-    // --- Dữ liệu tại Đà Nẵng ---
-    {
-      id: "dn001",
-      address: "55 Võ Nguyên Giáp, Sơn Trà, Đà Nẵng",
-      area: 300,
-      plotNumber: "ST-202",
-      shape: [
-        { lat: 16.0642, lng: 108.2428 },
-        { lat: 16.0642, lng: 108.2432 },
-        { lat: 16.0638, lng: 108.2432 },
-        { lat: 16.0638, lng: 108.2428 },
-        { lat: 16.0642, lng: 108.2428 }
-      ],
-      frontDirection: "Đông",
-      fullAddress: "55 Võ Nguyên Giáp, Phường Phước Mỹ, Quận Sơn Trà, Đà Nẵng",
-      landType: "Đất thương mại dịch vụ",
-      legalStatus: "Sổ hồng",
-      amenities: [
-        { name: "Bệnh viện Đa khoa Đà Nẵng", distance: 4.0, type: "hospital" },
-        { name: "Bãi biển Mỹ Khê", distance: 0.1, type: "park" },
-        { name: "Chợ hải sản Phước Mỹ", distance: 1.0, type: "market" }
-      ],
-      roadWidth: 25,
-      maxRooms: 15,
-      expansion: false,
-      priceEstimate: {
-        pricePerM2: 300000000,
-        totalValue: 90000000000,
-        confidence: 90
-      },
-      recentTransactions: [
-          { id: "tx009", date: "2025-03-03", area: 280, price: 82000000000, distance: 500, address: "Đường Hồ Nghinh" },
-          { id: "tx010", date: "2025-05-19", area: 320, price: 95000000000, distance: 400, address: "Khách sạn gần cầu Rồng" }
-      ],
-      liquidityDays: 70,
-      averagePrice: 295000000
-    },
-    {
-      id: "dn002",
-      address: "2 Bạch Đằng, Hải Châu, Đà Nẵng",
-      area: 180,
-      plotNumber: "HC-101",
-      shape: [
-        { lat: 16.0712, lng: 108.2228 },
-        { lat: 16.0712, lng: 108.2232 },
-        { lat: 16.0708, lng: 108.2232 },
-        { lat: 16.0708, lng: 108.2228 },
-        { lat: 16.0712, lng: 108.2228 }
-      ],
-      frontDirection: "Bắc",
-      fullAddress: "2 Bạch Đằng, Phường Thạch Thang, Quận Hải Châu, Đà Nẵng",
-      landType: "Đất ở đô thị",
-      legalStatus: "Sổ đỏ chính chủ",
-      amenities: [
-          { name: "Bệnh viện C Đà Nẵng", distance: 0.8, type: "hospital" },
-          { name: "Trường THPT Phan Châu Trinh", distance: 1.5, type: "school" },
-          { name: "Chợ Cồn", distance: 1.2, type: "market" },
-          { name: "Sân bay Quốc tế Đà Nẵng", distance: 3.0, type: "transport"}
-      ],
-      roadWidth: 18,
-      maxRooms: 7,
-      expansion: false,
-      priceEstimate: {
-          pricePerM2: 400000000,
-          totalValue: 72000000000,
-          confidence: 93
-      },
-      recentTransactions: [
-          { id: "tx011", date: "2025-01-30", area: 170, price: 68000000000, distance: 200, address: "Đường Nguyễn Văn Linh" }
-      ],
-      liquidityDays: 50,
-      averagePrice: 390000000
-    }
+    recentTransactions: [
+      { id: "tx011", date: "2025-03-15", area: 3200, price: 170000000000, distance: 200, address: "Thửa 37 Tờ 89" },
+      { id: "tx012", date: "2025-04-25", area: 3250, price: 175000000000, distance: 250, address: "Thửa 39 Tờ 89" }
+    ],
+    liquidityDays: 50,
+    averagePrice: 53500000
+  }
   ];
