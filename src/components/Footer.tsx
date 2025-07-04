@@ -17,6 +17,11 @@ const Footer = () => {
           </div>
           <div className="flex gap-3 text-xs mt-2">
             <a href="/privacy-policy" className="hover:underline">Chính sách bảo mật</a>
+            <a href="/privacy-policy" className="hover:underline">Chính sách bảo mật</a>
+            <a href="/privacy-policy" className="hover:underline">Chính sách bảo mật</a>
+            <a href="/privacy-policy" className="hover:underline">Chính sách bảo mật</a>
+            <a href="/privacy-policy" className="hover:underline">Chính sách bảo mật</a>
+            <a href="/privacy-policy" className="hover:underline">Chính sách bảo mật</a>
             <span>|</span>
             <a href="/terms" className="hover:underline">Điều khoản sử dụng</a>
           </div>
