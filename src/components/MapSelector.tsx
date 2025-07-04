@@ -40,7 +40,7 @@ const MapSelector = ({ onPlotSelect = () => {}, onDrawCustom = () => {}, onCance
   const [detailsData, setDetailsData] = useState<LandData | null>(null);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
   const mapRef = useRef<any>(null);
-  const [mapCenter, setMapCenter] = useState({ lat: 10.762622, lng: 106.660172 });
+  const [mapCenter, setMapCenter] = useState({ lat: 21.028511, lng: 105.804817 });
   const [shouldMoveMap, setShouldMoveMap] = useState(false);
   const [markerPosition, setMarkerPosition] = useState<{ lat: number; lng: number } | null>(null);
 

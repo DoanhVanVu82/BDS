@@ -1,33 +1,40 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import Topbar from "@/components/Topbar";
-import PropertyForm from "./pages/PropertyForm";
+import SearchPage from "@/pages/SearchPage";
+import MapSelectPage from "@/pages/MapSelectPage";
+import ResultsPage from "@/pages/ResultsPage";
+import PropertyForm from "@/pages/PropertyForm";
+import NotFound from "@/pages/NotFound";
+import ScrollToTopButton from "@/components/ScrollToTopButton";
+import Footer from "@/components/Footer";
+import ScrollToTop from "@/components/ScrollToTop";
 
-const queryClient = new QueryClient();
+function AppLayout() {
+  const location = useLocation();
+  const hideFooter = location.pathname === "/map-select";
+  return (
+    <>
+      <Topbar />
+      <ScrollToTop />
+      <Routes>
+        <Route path="/" element={<SearchPage />} />
+        <Route path="/map-select" element={<MapSelectPage />} />
+        <Route path="/results" element={<ResultsPage />} />
+        <Route path="/property-form" element={<PropertyForm />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+      {!hideFooter && <Footer />}
+      <ScrollToTopButton />
+    </>
+  );
+}
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Topbar />
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/map-select" element={<Index />} />
-          <Route path="/results" element={<Index />} />
-          <Route path="/property-form" element={<PropertyForm />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+function App() {
+  return (
+    <Router>
+      <AppLayout />
+    </Router>
+  );
+}
 
 export default App;

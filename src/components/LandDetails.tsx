@@ -57,51 +57,6 @@ const LandDetails = ({ land }: LandDetailsProps) => {
                   <p className="text-gray-600">{land.area} m² - Thửa số {land.plotNumber}</p>
                 </div>
               </div>
-
-              <div className="flex items-start gap-3">
-                <FileText className="w-5 h-5 text-orange-600 mt-1 flex-shrink-0" />
-                <div>
-                  <p className="font-semibold text-gray-800">Thông tin & Pháp lý</p>
-                  <p className="text-gray-600">{land.landType}</p>
-                  <Badge variant="outline" className="mt-1 bg-blue-50 text-blue-700 border-blue-200">
-                    {land.legalStatus}
-                  </Badge>
-                  {/* Thông tin loại bất động sản và chi tiết loại đó từ PropertyForm (làm thông tin con) */}
-                  {((land as any).type === 'dat-ban' || (land as any).type === 'nha-ban') && (
-                    <div className="mt-2 ml-4 border-l-2 border-blue-100 pl-4 text-sm">
-                      <div className="font-semibold text-blue-700 mb-1">Loại bất động sản: <span className="font-normal text-gray-700">{(land as any).type === 'dat-ban' ? 'Đất bán' : (land as any).type === 'nha-ban' ? 'Nhà bán' : '-'}</span></div>
-                      {(land as any).type === 'dat-ban' && (
-                        <ul className="space-y-1">
-                          <li><span className="font-medium">Loại đất:</span> {(land as any).loaiDat || '-'}</li>
-                          {(land as any).huongDat && (<li><span className="font-medium">Hướng đất:</span> {(land as any).huongDat}</li>)}
-                          {(land as any).viTriDat && (<li><span className="font-medium">Vị trí/Lối vào:</span> {(land as any).viTriDat}</li>)}
-                          {Array.isArray((land as any).dacDiemDat) && (land as any).dacDiemDat.length > 0 && (<li><span className="font-medium">Đặc điểm & Pháp lý:</span> {(land as any).dacDiemDat.join(', ')}</li>)}
-                          {Array.isArray((land as any).viewDat) && (land as any).viewDat.length > 0 && (<li><span className="font-medium">View/Hướng nhìn:</span> {(land as any).viewDat.join(', ')}</li>)}
-                          {Array.isArray((land as any).tiemNangDat) && (land as any).tiemNangDat.length > 0 && (<li><span className="font-medium">Mục đích sử dụng/Tiềm năng:</span> {(land as any).tiemNangDat.join(', ')}</li>)}
-                          {Array.isArray((land as any).loaiDuongDat) && (land as any).loaiDuongDat.length > 0 && (<li><span className="font-medium">Loại đường:</span> {(land as any).loaiDuongDat.join(', ')}</li>)}
-                        </ul>
-                      )}
-                      {(land as any).type === 'nha-ban' && (
-                        <ul className="space-y-1">
-                          <li><span className="font-medium">Loại hình nhà đất:</span> {(land as any).loaiNha || '-'}</li>
-                          {(land as any).soPhongNgu && (<li><span className="font-medium">Số phòng ngủ:</span> {(land as any).soPhongNgu}</li>)}
-                          {(land as any).soTang && (<li><span className="font-medium">Số tầng:</span> {(land as any).soTang}</li>)}
-                          {(land as any).huongCua && (<li><span className="font-medium">Hướng cửa chính:</span> {(land as any).huongCua}</li>)}
-                          {(land as any).viTriNha && (<li><span className="font-medium">Vị trí/Lối vào:</span> {(land as any).viTriNha}</li>)}
-                          {(land as any).noiThat && (<li><span className="font-medium">Tình trạng nội thất:</span> {(land as any).noiThat}</li>)}
-                          {Array.isArray((land as any).dacDiemNha) && (land as any).dacDiemNha.length > 0 && (<li><span className="font-medium">Đặc điểm & Tiện ích:</span> {(land as any).dacDiemNha.join(', ')}</li>)}
-                          {Array.isArray((land as any).viewNha) && (land as any).viewNha.length > 0 && (<li><span className="font-medium">View/Hướng nhìn:</span> {(land as any).viewNha.join(', ')}</li>)}
-                          {Array.isArray((land as any).tiemNangNha) && (land as any).tiemNangNha.length > 0 && (<li><span className="font-medium">Mục đích sử dụng/Tiềm năng:</span> {(land as any).tiemNangNha.join(', ')}</li>)}
-                          {Array.isArray((land as any).loaiDuongNha) && (land as any).loaiDuongNha.length > 0 && (<li><span className="font-medium">Loại đường:</span> {(land as any).loaiDuongNha.join(', ')}</li>)}
-                        </ul>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-4">
               <div className="flex items-start gap-3">
                 <Car className="w-5 h-5 text-gray-600 mt-1 flex-shrink-0" />
                 <div>
@@ -132,6 +87,66 @@ const LandDetails = ({ land }: LandDetailsProps) => {
                     {land.expansion ? 'Có' : 'Không'}
                   </Badge>
                 </div>
+              </div>         
+            </div>
+
+            <div className="space-y-4">
+            <div className="flex items-start gap-3">
+                <FileText className="w-5 h-5 text-orange-600 mt-1 flex-shrink-0" />
+                <div>
+                  <p className="font-semibold text-gray-800">Thông tin & Pháp lý</p>
+                  <p className="text-gray-600">{land.landType}</p>
+                  <Badge variant="outline" className="mt-1 bg-blue-50 text-blue-700 border-blue-200">
+                    {land.legalStatus}
+                  </Badge>
+                  {/* Thông tin loại bất động sản và chi tiết loại đó từ PropertyForm (làm thông tin con) */}
+                  {((land as any).type === 'dat-ban' || (land as any).type === 'nha-ban') && (
+                    <div className="mt-2 text-sm bg-blue-50/60 rounded-lg p-3 border border-blue-100">
+                      <div className="font-semibold text-blue-700 mb-1">Loại bất động sản: <span className="font-normal text-gray-700">{(land as any).type === 'dat-ban' ? 'Đất bán' : (land as any).type === 'nha-ban' ? 'Nhà bán' : '-'}</span></div>
+                      {(land as any).type === 'dat-ban' && (
+                        <ul className="space-y-1">
+                          <li><span className="font-medium">Loại đất:</span> {(land as any).loaiDat || '-'}</li>
+                          {(land as any).huongDat && (<li><span className="font-medium">Hướng đất:</span> {(land as any).huongDat}</li>)}
+                          {(land as any).viTriDat && (<li><span className="font-medium">Vị trí/Lối vào:</span> {(land as any).viTriDat}</li>)}
+                          {Array.isArray((land as any).dacDiemDat) && (land as any).dacDiemDat.length > 0 && (
+                            <li><span className="font-medium">Đặc điểm & Pháp lý:</span> <span className="flex flex-wrap gap-1 mt-1">{(land as any).dacDiemDat.map((d: string, i: number) => <span key={i} className="inline-block bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-xs font-medium">{d}</span>)}</span></li>
+                          )}
+                          {Array.isArray((land as any).viewDat) && (land as any).viewDat.length > 0 && (
+                            <li><span className="font-medium">View/Hướng nhìn:</span> <span className="flex flex-wrap gap-1 mt-1">{(land as any).viewDat.map((d: string, i: number) => <span key={i} className="inline-block bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-xs font-medium">{d}</span>)}</span></li>
+                          )}
+                          {Array.isArray((land as any).tiemNangDat) && (land as any).tiemNangDat.length > 0 && (
+                            <li><span className="font-medium">Mục đích sử dụng/Tiềm năng:</span> <span className="flex flex-wrap gap-1 mt-1">{(land as any).tiemNangDat.map((d: string, i: number) => <span key={i} className="inline-block bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-xs font-medium">{d}</span>)}</span></li>
+                          )}
+                          {Array.isArray((land as any).loaiDuongDat) && (land as any).loaiDuongDat.length > 0 && (
+                            <li><span className="font-medium">Loại đường:</span> <span className="flex flex-wrap gap-1 mt-1">{(land as any).loaiDuongDat.map((d: string, i: number) => <span key={i} className="inline-block bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-xs font-medium">{d}</span>)}</span></li>
+                          )}
+                        </ul>
+                      )}
+                      {(land as any).type === 'nha-ban' && (
+                        <ul className="space-y-1">
+                          <li><span className="font-medium">Loại hình nhà đất:</span> {(land as any).loaiNha || '-'}</li>
+                          {(land as any).soPhongNgu && (<li><span className="font-medium">Số phòng ngủ:</span> {(land as any).soPhongNgu}</li>)}
+                          {(land as any).soTang && (<li><span className="font-medium">Số tầng:</span> {(land as any).soTang}</li>)}
+                          {(land as any).huongCua && (<li><span className="font-medium">Hướng cửa chính:</span> {(land as any).huongCua}</li>)}
+                          {(land as any).viTriNha && (<li><span className="font-medium">Vị trí/Lối vào:</span> {(land as any).viTriNha}</li>)}
+                          {(land as any).noiThat && (<li><span className="font-medium">Tình trạng nội thất:</span> {(land as any).noiThat}</li>)}
+                          {Array.isArray((land as any).dacDiemNha) && (land as any).dacDiemNha.length > 0 && (
+                            <li><span className="font-medium">Đặc điểm & Tiện ích:</span> <span className="flex flex-wrap gap-1 mt-1">{(land as any).dacDiemNha.map((d: string, i: number) => <span key={i} className="inline-block bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-xs font-medium">{d}</span>)}</span></li>
+                          )}
+                          {Array.isArray((land as any).viewNha) && (land as any).viewNha.length > 0 && (
+                            <li><span className="font-medium">View/Hướng nhìn:</span> <span className="flex flex-wrap gap-1 mt-1">{(land as any).viewNha.map((d: string, i: number) => <span key={i} className="inline-block bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-xs font-medium">{d}</span>)}</span></li>
+                          )}
+                          {Array.isArray((land as any).tiemNangNha) && (land as any).tiemNangNha.length > 0 && (
+                            <li><span className="font-medium">Mục đích sử dụng/Tiềm năng:</span> <span className="flex flex-wrap gap-1 mt-1">{(land as any).tiemNangNha.map((d: string, i: number) => <span key={i} className="inline-block bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-xs font-medium">{d}</span>)}</span></li>
+                          )}
+                          {Array.isArray((land as any).loaiDuongNha) && (land as any).loaiDuongNha.length > 0 && (
+                            <li><span className="font-medium">Loại đường:</span> <span className="flex flex-wrap gap-1 mt-1">{(land as any).loaiDuongNha.map((d: string, i: number) => <span key={i} className="inline-block bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-xs font-medium">{d}</span>)}</span></li>
+                          )}
+                        </ul>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -146,7 +161,7 @@ const LandDetails = ({ land }: LandDetailsProps) => {
           </CardTitle>
         </CardHeader>
         <CardContent className="p-6">
-          <div className="mb-6">
+          <div className="w-full h-80 rounded-xl overflow-hidden">
             <Map shape={land.shape} amenities={land.amenities} />
           </div>
           

@@ -25,41 +25,46 @@ const TIEM_NANG_NHA = ["Tiệm kinh doanh", "Làm văn phòng", "Bán thời tra
 const TIEM_NANG_DAT = ["Tiệm kinh doanh", "Làm văn phòng", "Bán thời trang", "Làm nhà hàng", "Làm quán ăn", "Làm cửa hàng", "Làm kho xưởng", "Làm nhà trọ", "Kinh doanh dòng tiền", "Tiện cho thuê"];
 const DAC_DIEM_DAT = ["Lô góc", "Đất nền (chưa có công trình)", "Đất thổ vườn (kết hợp đất ở và đất vườn)", "Có thổ cư", "Full thổ cư"];
 
-function MultiChoice({ label, options, value, onChange }: { label: string, options: string[], value: string[], onChange: (v: string[]) => void }) {
+function MultiChoice({ label, options, value, onChange, required, error }: { label: string, options: string[], value: string[], onChange: (v: string[]) => void, required?: boolean, error?: string }) {
   return (
     <div className="mb-4">
-      <div className="font-semibold mb-2">{label}</div>
+      <div className="font-semibold mb-2">{label} {required && <span className="text-red-500">*</span>}</div>
       <div className="flex flex-wrap gap-2">
         {options.map(opt => (
           <Button
             key={opt}
             type="button"
             variant={value.includes(opt) ? "default" : "outline"}
-            className="rounded-full px-4 py-2 text-sm"
+            className={`rounded-full px-4 py-2 text-sm ${error ? 'border-red-500' : ''}`}
             onClick={() => value.includes(opt) ? onChange(value.filter(v => v !== opt)) : onChange([...value, opt])}
+            aria-invalid={!!error}
           >
             {opt}
           </Button>
         ))}
       </div>
+      {error && <div className="text-red-500 text-sm mt-1">{error}</div>}
     </div>
   );
 }
 
-function SingleSelect({ label, options, value, onChange }: { label: string, options: string[], value: string, onChange: (v: string) => void }) {
+function SingleSelect({ label, options, value, onChange, required, error }: { label: string, options: string[], value: string, onChange: (v: string) => void, required?: boolean, error?: string }) {
   return (
     <div className="mb-4">
-      <label className="font-semibold mb-2 block">{label}</label>
+      <label className="font-semibold mb-2 block">{label} {required && <span className="text-red-500">*</span>}</label>
       <select
-        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-400"
+        className={`w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-400 ${error ? 'border-red-500' : ''}`}
         value={value}
         onChange={e => onChange(e.target.value)}
+        required={required}
+        aria-invalid={!!error}
       >
         <option value="">Chọn {label.toLowerCase()}</option>
         {options.map(opt => (
           <option key={opt} value={opt}>{opt}</option>
         ))}
       </select>
+      {error && <div className="text-red-500 text-sm mt-1">{error}</div>}
     </div>
   );
 }
@@ -95,12 +100,31 @@ export default function PropertyForm() {
   const [tiemNangNha, setTiemNangNha] = useState<string[]>([]);
   const [loaiDuongNha, setLoaiDuongNha] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState<any>({});
 
   // Polygon giả lập (nếu có)
   const polygon = state.shape || [];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    let newErrors: any = {};
+    // Validate SingleSelect
+    if (!type) newErrors.type = 'Bắt buộc chọn loại.';
+    // Validate MultiChoice
+    if (type === 'dat-ban') {
+      if (dacDiemDat.length === 0) newErrors.dacDiemDat = 'Chọn ít nhất một.';
+      if (viewDat.length === 0) newErrors.viewDat = 'Chọn ít nhất một.';
+      if (tiemNangDat.length === 0) newErrors.tiemNangDat = 'Chọn ít nhất một.';
+      if (loaiDuongDat.length === 0) newErrors.loaiDuongDat = 'Chọn ít nhất một.';
+    }
+    if (type === 'nha-ban') {
+      if (dacDiemNha.length === 0) newErrors.dacDiemNha = 'Chọn ít nhất một.';
+      if (viewNha.length === 0) newErrors.viewNha = 'Chọn ít nhất một.';
+      if (tiemNangNha.length === 0) newErrors.tiemNangNha = 'Chọn ít nhất một.';
+      if (loaiDuongNha.length === 0) newErrors.loaiDuongNha = 'Chọn ít nhất một.';
+    }
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return;
     setIsLoading(true);
     // Gom dữ liệu form và toàn bộ state (object polygon)
     const formData = {
@@ -128,7 +152,7 @@ export default function PropertyForm() {
     setTimeout(() => {
       setIsLoading(false);
       navigate("/results", { state: { formData } });
-    }, 2000);
+    }, 5000);
   };
 
   return (
@@ -168,7 +192,7 @@ export default function PropertyForm() {
               <input className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-400" value={width} onChange={e => setWidth(e.target.value)} placeholder="Chiều ngang" required />
             </div>
           </div>
-          <SingleSelect label="Loại" options={LAND_TYPES.map(l => l.label)} value={LAND_TYPES.find(l => l.value === type)?.label || ""} onChange={val => setType(LAND_TYPES.find(l => l.label === val)?.value || "dat-ban")} />
+          <SingleSelect label="Loại" options={LAND_TYPES.map(l => l.label)} value={LAND_TYPES.find(l => l.value === type)?.label || ""} onChange={val => setType(LAND_TYPES.find(l => l.label === val)?.value || "dat-ban")} required error={errors.type} />
         </Card>
         <Card className="p-4">
           <div className="font-bold mb-2">Vị trí trên bản đồ</div>
@@ -186,13 +210,13 @@ export default function PropertyForm() {
       <div className="space-y-4">
         {type === "dat-ban" && (
           <Card className="p-6 space-y-4">
-            <SingleSelect label="Hướng đất" options={HUONG_DAT} value={huongDat} onChange={setHuongDat} />
-            <SingleSelect label="Vị trí / Lối vào" options={VI_TRI_DAT} value={viTriDat} onChange={setViTriDat} />
-            <SingleSelect label="Loại đất" options={LOAI_DAT} value={loaiDat} onChange={setLoaiDat} />
-            <MultiChoice label="Đặc điểm & Pháp lý" options={DAC_DIEM_DAT} value={dacDiemDat} onChange={setDacDiemDat} />
-            <MultiChoice label="View / Hướng nhìn" options={VIEW} value={viewDat} onChange={setViewDat} />
-            <MultiChoice label="Mục đích sử dụng / Tiềm năng" options={TIEM_NANG_DAT} value={tiemNangDat} onChange={setTiemNangDat} />
-            <MultiChoice label="Loại đường" options={LOAI_DUONG} value={loaiDuongDat} onChange={setLoaiDuongDat} />
+            <SingleSelect label="Hướng đất" options={HUONG_DAT} value={huongDat} onChange={setHuongDat} required error={errors.huongDat} />
+            <SingleSelect label="Vị trí / Lối vào" options={VI_TRI_DAT} value={viTriDat} onChange={setViTriDat} required error={errors.viTriDat} />
+            <SingleSelect label="Loại đất" options={LOAI_DAT} value={loaiDat} onChange={setLoaiDat} required error={errors.loaiDat} />
+            <MultiChoice label="Đặc điểm & Pháp lý" options={DAC_DIEM_DAT} value={dacDiemDat} onChange={setDacDiemDat} required error={errors.dacDiemDat} />
+            <MultiChoice label="View / Hướng nhìn" options={VIEW} value={viewDat} onChange={setViewDat} required error={errors.viewDat} />
+            <MultiChoice label="Mục đích sử dụng / Tiềm năng" options={TIEM_NANG_DAT} value={tiemNangDat} onChange={setTiemNangDat} required error={errors.tiemNangDat} />
+            <MultiChoice label="Loại đường" options={LOAI_DUONG} value={loaiDuongDat} onChange={setLoaiDuongDat} required error={errors.loaiDuongDat} />
           </Card>
         )}
         {type === "nha-ban" && (
@@ -207,14 +231,14 @@ export default function PropertyForm() {
                 <input className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-400" value={soTang} onChange={e => setSoTang(e.target.value)} placeholder="Số tầng" required />
               </div>
             </div>
-            <SingleSelect label="Hướng cửa chính" options={HUONG_CUA} value={huongCua} onChange={setHuongCua} />
-            <SingleSelect label="Vị trí / Lối vào" options={VI_TRI} value={viTriNha} onChange={setViTriNha} />
-            <SingleSelect label="Loại hình nhà đất" options={LOAI_NHA} value={loaiNha} onChange={setLoaiNha} />
-            <SingleSelect label="Tình trạng nội thất" options={NOI_THAT} value={noiThat} onChange={setNoiThat} />
-            <MultiChoice label="Đặc điểm & Tiện ích" options={DAC_DIEM_NHA} value={dacDiemNha} onChange={setDacDiemNha} />
-            <MultiChoice label="View / Hướng nhìn" options={VIEW} value={viewNha} onChange={setViewNha} />
-            <MultiChoice label="Mục đích sử dụng / Tiềm năng" options={TIEM_NANG_NHA} value={tiemNangNha} onChange={setTiemNangNha} />
-            <MultiChoice label="Loại đường" options={LOAI_DUONG} value={loaiDuongNha} onChange={setLoaiDuongNha} />
+            <SingleSelect label="Hướng cửa chính" options={HUONG_CUA} value={huongCua} onChange={setHuongCua} required error={errors.huongCua} />
+            <SingleSelect label="Vị trí / Lối vào" options={VI_TRI} value={viTriNha} onChange={setViTriNha} required error={errors.viTriNha} />
+            <SingleSelect label="Loại hình nhà đất" options={LOAI_NHA} value={loaiNha} onChange={setLoaiNha} required error={errors.loaiNha} />
+            <SingleSelect label="Tình trạng nội thất" options={NOI_THAT} value={noiThat} onChange={setNoiThat} required error={errors.noiThat} />
+            <MultiChoice label="Đặc điểm & Tiện ích" options={DAC_DIEM_NHA} value={dacDiemNha} onChange={setDacDiemNha} required error={errors.dacDiemNha} />
+            <MultiChoice label="View / Hướng nhìn" options={VIEW} value={viewNha} onChange={setViewNha} required error={errors.viewNha} />
+            <MultiChoice label="Mục đích sử dụng / Tiềm năng" options={TIEM_NANG_NHA} value={tiemNangNha} onChange={setTiemNangNha} required error={errors.tiemNangNha} />
+            <MultiChoice label="Loại đường" options={LOAI_DUONG} value={loaiDuongNha} onChange={setLoaiDuongNha} required error={errors.loaiDuongNha} />
           </Card>
         )}
       </div>

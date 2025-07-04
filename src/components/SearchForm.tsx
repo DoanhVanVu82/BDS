@@ -213,7 +213,7 @@ const SearchForm = ({ onSearch, isSearching }: SearchFormProps) => {
               ) : (
                 <>
                   <Search className="w-5 h-5 mr-2" />
-                  Tìm kiếm thông tin
+                  Tìm kiếm
                 </>
               )}
             </Button>

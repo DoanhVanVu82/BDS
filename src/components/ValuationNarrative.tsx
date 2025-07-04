@@ -109,16 +109,6 @@ const ValuationNarrative = ({ land }: ValuationNarrativeProps) => {
             <p className="text-gray-800 pl-2">{marketAnalysis}</p>
           </div>
         )}
-
-        <div>
-          <h4 className="font-semibold text-indigo-700 flex items-center gap-2 mb-2">
-            <Star className="w-5 h-5" />
-            Kết luận
-          </h4>
-          <p className="text-gray-800 pl-2">
-            Tổng hợp các yếu tố trên, mức giá ước tính đã phản ánh toàn diện các giá trị nội tại và lợi thế cạnh tranh của bất động sản so với thị trường hiện tại.
-          </p>
-        </div>
       </CardContent>
     </Card>
   );

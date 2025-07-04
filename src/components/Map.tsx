@@ -105,21 +105,6 @@ const Map = ({ shape, amenities }: MapProps) => {
             pathOptions={{ color: 'red', weight: 2, fillOpacity: 0.2 }}
           />
         )}
-        {amenities && amenities.map((amenity, idx) => {
-          // Ước lượng vị trí tiện ích dựa trên khoảng cách và loại (giả lập hướng)
-          const angle = (idx / amenities.length) * 2 * Math.PI;
-          const dLat = (amenity.distance / 111) * Math.cos(angle); // 1 độ lat ~ 111km
-          const dLng = (amenity.distance / (111 * Math.cos(centroid.lat * Math.PI / 180))) * Math.sin(angle);
-          const lat = centroid.lat + dLat;
-          const lng = centroid.lng + dLng;
-          return (
-            <Marker key={amenity.name} position={[lat, lng]}>
-              <Popup>
-                <b>{amenity.name}</b><br />Cách: {amenity.distance} km<br />Loại: {amenity.type}
-              </Popup>
-            </Marker>
-          );
-        })}
       </MapContainer>
     </div>
   );

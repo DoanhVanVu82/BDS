@@ -40,10 +40,45 @@ export interface Amenity {
   
   // Bổ sung lượng lớn dữ liệu mẫu
   export const mockLandDataList: LandData[] = [
-    // --- Dữ liệu tại TP.HCM ---
     // 1. Thửa 3 Tờ 82
   {
-    id: "hcm002",
+    id: "hn001",
+    address: "Thửa 25 Tờ 83, Phường Dương Nội, Hà Đông, Hà Nội",
+    area: 225.8,
+    plotNumber: "25/83",
+    shape: [
+      { lat: 20.980320789122, lng: 105.75531714916 },
+      { lat: 20.980139879902, lng: 105.75517226993 },
+      { lat: 20.980188961186, lng: 105.75510317632 },
+      { lat: 20.980369870892, lng: 105.75524795935 },
+      { lat: 20.980335513826, lng: 105.75529635375 },
+      { lat: 20.980320789122, lng: 105.75531714916 },
+    ],
+    fullAddress: "Thửa 25 Tờ 83, Phường Dương Nội, Hà Đông, Hà Nội",
+    landType: "Đất ở tại đô thị",
+    legalStatus: "Sổ đỏ chính chủ",
+    amenities: [
+      { name: "Bệnh viện Hà Đông", distance: 2.3, type: "hospital" },
+      { name: "Trường THCS Dương Nội", distance: 1.6, type: "school" },
+      { name: "Chợ Dương Nội", distance: 1.1, type: "market" }
+    ],
+    roadWidth: 12,
+    maxRooms: 5,
+    expansion: true,
+    priceEstimate: {
+      pricePerM2: 57000000,
+      totalValue: 12441390000,
+      confidence: 89
+    },
+    recentTransactions: [
+      { id: "tx013", date: "2025-03-20", area: 220, price: 12500000000, distance: 150, address: "Thửa 1 Tờ 0" },
+      { id: "tx014", date: "2025-04-10", area: 215, price: 12000000000, distance: 200, address: "Thửa 2 Tờ 0" }
+    ],
+    liquidityDays: 50,
+    averagePrice: 56500000
+  },
+  {
+    id: "hn002",
     address: "Thửa 3 Tờ 82, Phường Dương Nội, Hà Đông, Hà Nội",
     area: 178.6,
     plotNumber: "3/82",
@@ -80,7 +115,7 @@ export interface Amenity {
 
   // 2. Thửa 1 Tờ 89
   {
-    id: "hcm003",
+    id: "hn003",
     address: "Thửa 1 Tờ 89, Phường Dương Nội, Hà Đông, Hà Nội",
     area: 6675.1,
     plotNumber: "1/89",
@@ -121,7 +156,7 @@ export interface Amenity {
 
   // 3. Thửa 63 Tờ 82
   {
-    id: "hcm004",
+    id: "hn004",
     address: "Thửa 63 Tờ 82, Phường Dương Nội, Hà Đông, Hà Nội",
     area: 6659.7,
     plotNumber: "63/82",
@@ -163,7 +198,7 @@ export interface Amenity {
 
   // 4. Thửa 39 Tờ 89
   {
-    id: "hcm005",
+    id: "hn005",
     address: "Thửa 39 Tờ 89, Phường Dương Nội, Hà Đông, Hà Nội",
     area: 8100.9,
     plotNumber: "39/89",
@@ -206,7 +241,7 @@ export interface Amenity {
 
   // 5. Thửa 38 Tờ 89
   {
-    id: "hcm006",
+    id: "hn006",
     address: "Thửa 38 Tờ 89, Phường Dương Nội, Hà Đông, Hà Nội",
     area: 3218.3,
     plotNumber: "38/89",
@@ -242,5 +277,77 @@ export interface Amenity {
     ],
     liquidityDays: 50,
     averagePrice: 53500000
-  }
+  },
+  {
+    id: "hn007",
+    address: "Thửa 33 Tờ 83, Phường Dương Nội, Hà Đông, Hà Nội",
+    area: 271.1,
+    plotNumber: "33/83",
+    shape: [
+      { lat: 20.980171914014, lng: 105.75552557567 },
+      { lat: 20.980112196204, lng: 105.75561009939 },
+      { lat: 20.979961352894, lng: 105.75548835631 },
+      { lat: 20.97995373411, lng: 105.75543436542 },
+      { lat: 20.979992726635, lng: 105.75537945476 },
+      { lat: 20.980173095452, lng: 105.75552394668 },
+      { lat: 20.980171914014, lng: 105.75552557567 }
+    ],
+    fullAddress: "Thửa 33 Tờ 83, Phường Dương Nội, Hà Đông, Hà Nội",
+    landType: "Đất ở tại đô thị",
+    legalStatus: "Sổ đỏ chính chủ",
+    amenities: [
+      { name: "Bệnh viện Hà Đông", distance: 2.4, type: "hospital" },
+      { name: "Trường THCS Dương Nội", distance: 1.5, type: "school" },
+      { name: "Chợ Dương Nội", distance: 1.2, type: "market" }
+    ],
+    roadWidth: 10,
+    maxRooms: 6,
+    expansion: false,
+    priceEstimate: {
+      pricePerM2: 56500000,
+      totalValue: 15306615000,
+      confidence: 88
+    },
+    recentTransactions: [
+      { id: "tx021", date: "2025-03-12", area: 270, price: 15200000000, distance: 130, address: "Thửa 4 Tờ 83" },
+      { id: "tx022", date: "2025-04-02", area: 275, price: 15500000000, distance: 180, address: "Thửa 5 Tờ 83" }
+    ],
+    liquidityDays: 52,
+    averagePrice: 56200000
+  },
+  {
+    id: "hn008",
+    address: "Thửa 34 Tờ 83, Phường Dương Nội, Hà Đông, Hà Nội",
+    area: 226,
+    plotNumber: "34/83",
+    shape: [
+      { lat: 20.980173095452, lng: 105.75552394668 },
+      { lat: 20.979992726635, lng: 105.75537945476 },
+      { lat: 20.980041989497, lng: 105.75531016986 },
+      { lat: 20.980222718382, lng: 105.75545495208 },
+      { lat: 20.980173095452, lng: 105.75552394668 }
+    ],
+    fullAddress: "Thửa 34 Tờ 83, Phường Dương Nội, Hà Đông, Hà Nội",
+    landType: "Đất ở tại đô thị",
+    legalStatus: "Sổ đỏ chính chủ",
+    amenities: [
+      { name: "Bệnh viện Hà Đông", distance: 2.2, type: "hospital" },
+      { name: "Trường THCS Dương Nội", distance: 1.4, type: "school" },
+      { name: "Chợ Dương Nội", distance: 1.0, type: "market" }
+    ],
+    roadWidth: 8,
+    maxRooms: 5,
+    expansion: true,
+    priceEstimate: {
+      pricePerM2: 57000000,
+      totalValue: 12882000000,
+      confidence: 90
+    },
+    recentTransactions: [
+      { id: "tx023", date: "2025-03-25", area: 225, price: 12750000000, distance: 100, address: "Thửa 6 Tờ 83" },
+      { id: "tx024", date: "2025-04-15", area: 230, price: 13100000000, distance: 160, address: "Thửa 7 Tờ 83" }
+    ],
+    liquidityDays: 48,
+    averagePrice: 56800000
+  }  
   ];
